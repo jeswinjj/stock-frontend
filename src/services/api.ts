@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5010/api',
+    baseURL: (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5010/api').replace(/\/$/, '') + '/',
 });
 
 api.interceptors.request.use((config) => {

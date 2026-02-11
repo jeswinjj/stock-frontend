@@ -5,6 +5,7 @@ import api from '@/services/api';
 import { SummaryCard } from '@/components/dashboard/SummaryCard';
 import { PortfolioBarChart } from '@/components/dashboard/PortfolioBarChart';
 import { PortfolioTable } from '@/components/dashboard/PortfolioTable';
+import { StockPerformanceChart } from '@/components/dashboard/StockPerformanceChart';
 import { TransactionModal } from '@/components/dashboard/TransactionModal';
 import { SellModal } from '@/components/dashboard/SellModal';
 import { Button } from '@/components/ui/BaseComponents';
@@ -15,6 +16,7 @@ export default function Dashboard() {
     const { user, logout, hideBalance, togglePrivacy, loading: authLoading } = useAuth();
     const [summary, setSummary] = useState<any>(null);
     const [stocks, setStocks] = useState<any[]>([]);
+    const [performance, setPerformance] = useState<any[]>([]);
     const [isBuyModalOpen, setIsBuyModalOpen] = useState(false);
     const [isSellModalOpen, setIsSellModalOpen] = useState(false);
     const [selectedStock, setSelectedStock] = useState<any>(null);
@@ -34,12 +36,14 @@ export default function Dashboard() {
     const fetchData = useCallback(async () => {
         if (!user) return;
         try {
-            const [sumRes, stockRes] = await Promise.all([
-                api.get('/portfolio/summary'),
-                api.get(`/stocks?sort=${sortConfig.column}&order=${sortConfig.order}`)
+            const [sumRes, stockRes, perfRes] = await Promise.all([
+                api.get('portfolio/summary'),
+                api.get(`stocks?sort=${sortConfig.column}&order=${sortConfig.order}`),
+                api.get('portfolio/stock-performance')
             ]);
             setSummary(sumRes.data);
             setStocks(stockRes.data);
+            setPerformance(perfRes.data);
         } catch (err) {
             console.error('Dashboard fetch error:', err);
         } finally {
@@ -212,6 +216,16 @@ export default function Dashboard() {
                             onSort={handleSort}
                             sortConfig={sortConfig}
                         />
+                    </section>
+
+                    <section className="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm">
+                        <div className="flex justify-between items-center mb-6">
+                            <div>
+                                <h2 className="text-xl font-bold text-gray-800">Stock-wise Performance</h2>
+                                <p className="text-xs font-medium text-gray-400 mt-1 uppercase tracking-wider">Invested Capital vs Current Value</p>
+                            </div>
+                        </div>
+                        <StockPerformanceChart data={performance} />
                     </section>
                 </div>
             </div>
