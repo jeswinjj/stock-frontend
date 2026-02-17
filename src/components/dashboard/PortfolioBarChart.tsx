@@ -24,11 +24,11 @@ export const PortfolioBarChart = ({ invested, currentValue }: PortfolioBarChartP
 
     return (
         <div className="w-full space-y-2">
-            <div className="flex justify-between text-xs font-medium text-gray-500 mb-1">
+            <div className="flex justify-between text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
                 <span>Portfolio Composition</span>
-                <span>{maskValue(currentValue)}</span>
+                <span className="text-gray-900 dark:text-white">{maskValue(currentValue)}</span>
             </div>
-            <div className="h-4 w-full bg-gray-100 rounded-full overflow-hidden flex">
+            <div className="h-4 w-full bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden flex">
                 <div
                     className="h-full bg-blue-500 transition-all duration-500"
                     style={{ width: `${investedWidth}%` }}
@@ -50,18 +50,18 @@ export const PortfolioBarChart = ({ invested, currentValue }: PortfolioBarChartP
                 )}
             </div>
             <div className="flex gap-4 mt-2">
-                <div className="flex items-center gap-1.5 text-xs">
-                    <div className="w-3 h-3 bg-blue-500 rounded-sm" />
+                <div className="flex items-center gap-1.5 text-xs text-gray-600 dark:text-gray-300">
+                    <div className="w-3 h-3 bg-blue-500 rounded-sm shadow-sm" />
                     <span>Invested ({maskValue(invested)})</span>
                 </div>
                 {isProfit ? (
-                    <div className="flex items-center gap-1.5 text-xs">
-                        <div className="w-3 h-3 bg-green-500 rounded-sm" />
+                    <div className="flex items-center gap-1.5 text-xs text-gray-600 dark:text-gray-300">
+                        <div className="w-3 h-3 bg-green-500 rounded-sm shadow-sm" />
                         <span>Profit ({maskValue(profitAmount)})</span>
                     </div>
                 ) : (
-                    <div className="flex items-center gap-1.5 text-xs">
-                        <div className="w-3 h-3 bg-red-500 rounded-sm" />
+                    <div className="flex items-center gap-1.5 text-xs text-gray-600 dark:text-gray-300">
+                        <div className="w-3 h-3 bg-red-500 rounded-sm shadow-sm" />
                         <span>Loss ({maskValue(lossAmount)})</span>
                     </div>
                 )}
