@@ -6,6 +6,7 @@ import { SummaryCard } from '@/components/dashboard/SummaryCard';
 import { PortfolioBarChart } from '@/components/dashboard/PortfolioBarChart';
 import { PortfolioTable } from '@/components/dashboard/PortfolioTable';
 import { StockPerformanceChart } from '@/components/dashboard/StockPerformanceChart';
+import { PortfolioHistoryChart } from '@/components/dashboard/PortfolioHistoryChart';
 import { TransactionModal } from '@/components/dashboard/TransactionModal';
 import { SellModal } from '@/components/dashboard/SellModal';
 import { Button } from '@/components/ui/BaseComponents';
@@ -202,6 +203,11 @@ export default function Dashboard() {
                             invested={summary?.totalInvested || 0}
                             currentValue={summary?.currentValue || 0}
                         />
+                    </section>
+
+                    {/* Historic Performance Chart */}
+                    <section className="bg-white dark:bg-slate-800 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm transition-colors duration-300 overflow-hidden">
+                        <PortfolioHistoryChart />
                     </section>
 
                     <section className="bg-white dark:bg-slate-800 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden transition-colors duration-300">
