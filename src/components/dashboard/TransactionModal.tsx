@@ -2,6 +2,8 @@
 import { useState, useEffect } from 'react';
 import { Button, Input } from '../ui/BaseComponents';
 import { X } from 'lucide-react';
+import api from '@/services/api';
+import { cn } from '@/lib/utils';
 
 interface TransactionModalProps {
     isOpen: boolean;
@@ -11,6 +13,8 @@ interface TransactionModalProps {
 }
 
 export const TransactionModal = ({ isOpen, onClose, onSubmit, initialData }: TransactionModalProps) => {
+    const [balance, setBalance] = useState<number>(0);
+    const [loadingPrice, setLoadingPrice] = useState(false);
     const [formData, setFormData] = useState({
         symbol: '',
         price: '',
@@ -20,6 +24,13 @@ export const TransactionModal = ({ isOpen, onClose, onSubmit, initialData }: Tra
     });
 
     useEffect(() => {
+        if (isOpen) {
+            // Fetch wallet balance when modal opens
+            api.get('/wallet')
+                .then(res => setBalance(parseFloat(res.data.balance)))
+                .catch(err => console.error('Failed to fetch wallet:', err));
+        }
+
         if (initialData) {
             setFormData({
                 symbol: initialData.symbol || '',
@@ -41,13 +52,21 @@ export const TransactionModal = ({ isOpen, onClose, onSubmit, initialData }: Tra
 
     if (!isOpen) return null;
 
+    const totalCost = (parseFloat(formData.price) || 0) * (parseInt(formData.quantity) || 0);
+    const isInsufficientFunds = totalCost > balance;
+
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
             <div className="w-full max-w-md bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-8 border border-gray-100 dark:border-gray-700 animate-in zoom-in-95 duration-200 transition-colors">
                 <div className="flex justify-between items-center mb-6">
-                    <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
-                        {initialData ? `Add More ${initialData.symbol}` : 'Add New Stock'}
-                    </h3>
+                    <div>
+                        <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
+                            {initialData ? `Add More ${initialData.symbol}` : 'Add New Stock'}
+                        </h3>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 font-medium mt-1">
+                            Wallet Balance: <span className="text-gray-900 dark:text-white font-bold">₹{balance.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                        </p>
+                    </div>
                     <button onClick={onClose} className="p-1 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-full transition-colors">
                         <X size={20} className="text-gray-400 dark:text-gray-500" />
                     </button>
@@ -99,11 +118,26 @@ export const TransactionModal = ({ isOpen, onClose, onSubmit, initialData }: Tra
                         />
                     </div>
 
-                    <div className="flex gap-4 pt-4">
+                    <div className="bg-gray-50 dark:bg-slate-900 p-3 rounded-lg border border-gray-100 dark:border-gray-700 flex justify-between items-center">
+                        <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Cost</span>
+                        <span className={cn("font-bold", isInsufficientFunds ? "text-red-500" : "text-gray-900 dark:text-white")}>
+                            ₹{totalCost.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                        </span>
+                    </div>
+
+                    {isInsufficientFunds && (
+                        <p className="text-xs text-red-500 font-bold text-center">Insufficient wallet balance</p>
+                    )}
+
+                    <div className="flex gap-4 pt-2">
                         <Button variant="outline" className="flex-1 h-12 text-gray-600 dark:text-gray-300 font-bold" onClick={onClose}>
                             Cancel
                         </Button>
-                        <Button className="flex-1 h-12 bg-blue-600 hover:bg-blue-700 text-white font-bold border-none" onClick={() => onSubmit(formData)}>
+                        <Button
+                            className="flex-1 h-12 bg-blue-600 hover:bg-blue-700 text-white font-bold border-none disabled:opacity-50 disabled:cursor-not-allowed"
+                            onClick={() => onSubmit(formData)}
+                            disabled={isInsufficientFunds || totalCost <= 0}
+                        >
                             Confirm
                         </Button>
                     </div>

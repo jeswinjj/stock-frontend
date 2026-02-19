@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/BaseComponents';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { LogOut, Plus, RefreshCw, AlertCircle, CheckCircle2, Eye, EyeOff } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { WalletCard } from '@/components/dashboard/WalletCard';
 
 export default function Dashboard() {
     const { user, logout, hideBalance, togglePrivacy, loading: authLoading } = useAuth();
@@ -137,6 +138,9 @@ export default function Dashboard() {
                         <p className="text-gray-500 dark:text-gray-400 font-medium">Monitoring {stocks.length} assets</p>
                     </div>
                     <div className="flex flex-wrap items-center gap-3">
+                        <div className="mr-2">
+                            <WalletCard />
+                        </div>
                         {/* <ThemeToggle /> */}
 
                         <Button
