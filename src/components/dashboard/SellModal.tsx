@@ -8,9 +8,10 @@ interface SellModalProps {
     onClose: () => void;
     onSubmit: (data: any) => void;
     stock: any;
+    isLoading?: boolean;
 }
 
-export const SellModal = ({ isOpen, onClose, onSubmit, stock }: SellModalProps) => {
+export const SellModal = ({ isOpen, onClose, onSubmit, stock, isLoading }: SellModalProps) => {
     const [formData, setFormData] = useState({
         symbol: '',
         price: '',
@@ -20,10 +21,16 @@ export const SellModal = ({ isOpen, onClose, onSubmit, stock }: SellModalProps) 
     const [error, setError] = useState('');
 
     useEffect(() => {
-        if (stock) {
-            setFormData(prev => ({ ...prev, symbol: stock.symbol }));
+        if (isOpen && stock) {
+            setFormData({
+                symbol: stock.symbol,
+                price: '',
+                quantity: '',
+                date: new Date().toISOString().split('T')[0]
+            });
+            setError('');
         }
-    }, [stock]);
+    }, [isOpen, stock]);
 
     if (!isOpen || !stock) return null;
 
@@ -35,6 +42,10 @@ export const SellModal = ({ isOpen, onClose, onSubmit, stock }: SellModalProps) 
         }
         if (qty <= 0) {
             setError('Quantity must be greater than 0');
+            return;
+        }
+        if (!formData.price || parseFloat(formData.price) <= 0) {
+            setError('Please enter a valid sell price');
             return;
         }
         setError('');
@@ -66,6 +77,7 @@ export const SellModal = ({ isOpen, onClose, onSubmit, stock }: SellModalProps) 
                             value={formData.quantity}
                             onChange={(e) => setFormData({ ...formData, quantity: e.target.value })}
                             placeholder={`Max: ${stock.totalQuantity}`}
+                            disabled={isLoading}
                             className="bg-gray-50 dark:bg-slate-900 border-gray-200 dark:border-gray-700 focus:bg-white dark:focus:bg-slate-900 dark:text-white transition-all"
                         />
                     </div>
@@ -76,6 +88,7 @@ export const SellModal = ({ isOpen, onClose, onSubmit, stock }: SellModalProps) 
                             value={formData.price}
                             onChange={(e) => setFormData({ ...formData, price: e.target.value })}
                             placeholder={`Current LTP: ${stock.currentPrice}`}
+                            disabled={isLoading}
                             className="bg-gray-50 dark:bg-slate-900 border-gray-200 dark:border-gray-700 focus:bg-white dark:focus:bg-slate-900 dark:text-white transition-all"
                         />
                     </div>
@@ -85,16 +98,21 @@ export const SellModal = ({ isOpen, onClose, onSubmit, stock }: SellModalProps) 
                             type="date"
                             value={formData.date}
                             onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                            disabled={isLoading}
                             className="bg-gray-50 dark:bg-slate-900 border-gray-200 dark:border-gray-700 focus:bg-white dark:focus:bg-slate-900 dark:text-white transition-all"
                         />
                     </div>
 
                     <div className="flex gap-4 pt-4">
-                        <Button variant="outline" className="flex-1 h-12 text-gray-600 dark:text-gray-300 font-bold" onClick={onClose}>
+                        <Button variant="outline" className="flex-1 h-12 text-gray-600 dark:text-gray-300 font-bold" onClick={onClose} disabled={isLoading}>
                             Cancel
                         </Button>
-                        <Button className="flex-1 h-12 bg-red-600 hover:bg-red-700 text-white font-bold border-none" onClick={handleSubmit}>
-                            Sell Stock
+                        <Button
+                            className="flex-1 h-12 bg-red-600 hover:bg-red-700 text-white font-bold border-none disabled:opacity-50"
+                            onClick={handleSubmit}
+                            disabled={isLoading}
+                        >
+                            {isLoading ? 'Processing...' : 'Sell Stock'}
                         </Button>
                     </div>
                 </div>

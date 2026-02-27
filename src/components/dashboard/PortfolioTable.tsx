@@ -17,7 +17,7 @@ interface Stock {
     currentValue: number;
     invested_amount?: number;
     realized_pl?: number;
-    last_updated_at?: string;
+    lastUpdatedAt?: string;
     dayChange?: number;
     dayChangePercent?: number;
 }
@@ -109,7 +109,7 @@ export const PortfolioTable = ({ stocks, onSell, onAddMore, onSort, sortConfig }
                                     </span>
                                 </td>
                                 <td className="px-6 py-4 text-xs text-gray-400 dark:text-gray-500">
-                                    {stock.last_updated_at ? dayjs(stock.last_updated_at).fromNow() : 'Never'}
+                                    {stock.lastUpdatedAt ? dayjs(stock.lastUpdatedAt).fromNow() : 'Never'}
                                 </td>
                                 <td className="px-6 py-4 text-right space-x-2 whitespace-nowrap">
                                     <button

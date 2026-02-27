@@ -25,6 +25,7 @@ export default function Dashboard() {
     const [selectedStock, setSelectedStock] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [isFetching, setIsFetching] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [toast, setToast] = useState<{ type: 'success' | 'error', message: string } | null>(null);
     const [sortConfig, setSortConfig] = useState<{ column: string; order: 'asc' | 'desc' }>({
         column: 'name',
@@ -84,6 +85,7 @@ export default function Dashboard() {
     };
 
     const handleBuySubmit = async (data: any) => {
+        setIsSubmitting(true);
         try {
             await api.post('/stocks/buy', data);
             setIsBuyModalOpen(false);
@@ -92,10 +94,13 @@ export default function Dashboard() {
             fetchData();
         } catch (err: any) {
             showToast('error', err.response?.data?.message || 'Error occurred');
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
     const handleSellSubmit = async (data: any) => {
+        setIsSubmitting(true);
         try {
             await api.post('/stocks/sell', data);
             setIsSellModalOpen(false);
@@ -104,6 +109,8 @@ export default function Dashboard() {
             fetchData();
         } catch (err: any) {
             showToast('error', err.response?.data?.message || 'Error occurred');
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -250,6 +257,7 @@ export default function Dashboard() {
                 onClose={() => { setIsBuyModalOpen(false); setSelectedStock(null); }}
                 onSubmit={handleBuySubmit}
                 initialData={selectedStock}
+                isLoading={isSubmitting}
             />
 
             <SellModal
@@ -257,6 +265,7 @@ export default function Dashboard() {
                 onClose={() => { setIsSellModalOpen(false); setSelectedStock(null); }}
                 onSubmit={handleSellSubmit}
                 stock={selectedStock}
+                isLoading={isSubmitting}
             />
         </div>
     );

@@ -10,11 +10,11 @@ interface TransactionModalProps {
     onClose: () => void;
     onSubmit: (data: any) => void;
     initialData?: any;
+    isLoading?: boolean;
 }
 
-export const TransactionModal = ({ isOpen, onClose, onSubmit, initialData }: TransactionModalProps) => {
+export const TransactionModal = ({ isOpen, onClose, onSubmit, initialData, isLoading }: TransactionModalProps) => {
     const [balance, setBalance] = useState<number>(0);
-    const [loadingPrice, setLoadingPrice] = useState(false);
     const [formData, setFormData] = useState({
         symbol: '',
         price: '',
@@ -29,19 +29,10 @@ export const TransactionModal = ({ isOpen, onClose, onSubmit, initialData }: Tra
             api.get('/wallet')
                 .then(res => setBalance(parseFloat(res.data.balance)))
                 .catch(err => console.error('Failed to fetch wallet:', err));
-        }
 
-        if (initialData) {
+            // Reset form data when opening
             setFormData({
-                symbol: initialData.symbol || '',
-                price: '', // Start empty for "Add More"
-                quantity: '',
-                type: 'BUY',
-                date: new Date().toISOString().split('T')[0]
-            });
-        } else {
-            setFormData({
-                symbol: '',
+                symbol: initialData?.symbol || '',
                 price: '',
                 quantity: '',
                 type: 'BUY',
@@ -67,7 +58,7 @@ export const TransactionModal = ({ isOpen, onClose, onSubmit, initialData }: Tra
                             Wallet Balance: <span className="text-gray-900 dark:text-white font-bold">₹{balance.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
                         </p>
                     </div>
-                    <button onClick={onClose} className="p-1 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-full transition-colors">
+                    <button onClick={onClose} className="p-1 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-full transition-colors" disabled={isLoading}>
                         <X size={20} className="text-gray-400 dark:text-gray-500" />
                     </button>
                 </div>
@@ -80,6 +71,7 @@ export const TransactionModal = ({ isOpen, onClose, onSubmit, initialData }: Tra
                                 value={formData.symbol}
                                 onChange={(e) => setFormData({ ...formData, symbol: e.target.value.toUpperCase() })}
                                 placeholder="e.g. RELIANCE"
+                                disabled={isLoading}
                                 className="bg-gray-50 dark:bg-slate-900 border-gray-200 dark:border-gray-700 focus:bg-white dark:focus:bg-slate-900 dark:text-white transition-all uppercase"
                             />
                         </div>
@@ -93,6 +85,7 @@ export const TransactionModal = ({ isOpen, onClose, onSubmit, initialData }: Tra
                                 value={formData.price}
                                 onChange={(e) => setFormData({ ...formData, price: e.target.value })}
                                 placeholder="0.00"
+                                disabled={isLoading}
                                 className="bg-gray-50 dark:bg-slate-900 border-gray-200 dark:border-gray-700 focus:bg-white dark:focus:bg-slate-900 dark:text-white transition-all"
                             />
                         </div>
@@ -103,6 +96,7 @@ export const TransactionModal = ({ isOpen, onClose, onSubmit, initialData }: Tra
                                 value={formData.quantity}
                                 onChange={(e) => setFormData({ ...formData, quantity: e.target.value })}
                                 placeholder="0"
+                                disabled={isLoading}
                                 className="bg-gray-50 dark:bg-slate-900 border-gray-200 dark:border-gray-700 focus:bg-white dark:focus:bg-slate-900 dark:text-white transition-all"
                             />
                         </div>
@@ -114,6 +108,7 @@ export const TransactionModal = ({ isOpen, onClose, onSubmit, initialData }: Tra
                             type="date"
                             value={formData.date}
                             onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                            disabled={isLoading}
                             className="bg-gray-50 dark:bg-slate-900 border-gray-200 dark:border-gray-700 focus:bg-white dark:focus:bg-slate-900 dark:text-white transition-all"
                         />
                     </div>
@@ -130,15 +125,15 @@ export const TransactionModal = ({ isOpen, onClose, onSubmit, initialData }: Tra
                     )}
 
                     <div className="flex gap-4 pt-2">
-                        <Button variant="outline" className="flex-1 h-12 text-gray-600 dark:text-gray-300 font-bold" onClick={onClose}>
+                        <Button variant="outline" className="flex-1 h-12 text-gray-600 dark:text-gray-300 font-bold" onClick={onClose} disabled={isLoading}>
                             Cancel
                         </Button>
                         <Button
                             className="flex-1 h-12 bg-blue-600 hover:bg-blue-700 text-white font-bold border-none disabled:opacity-50 disabled:cursor-not-allowed"
                             onClick={() => onSubmit(formData)}
-                            disabled={isInsufficientFunds || totalCost <= 0}
+                            disabled={isInsufficientFunds || totalCost <= 0 || isLoading}
                         >
-                            Confirm
+                            {isLoading ? 'Processing...' : 'Confirm'}
                         </Button>
                     </div>
                 </div>
