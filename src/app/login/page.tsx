@@ -26,16 +26,18 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 p-6">
-            <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl p-10 border border-gray-100">
+        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-slate-900 transition-colors duration-500 p-6">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-blue-500/10 via-transparent to-transparent pointer-events-none" />
+
+            <div className="w-full max-w-md bg-white dark:bg-slate-800 rounded-3xl shadow-2xl p-10 border border-gray-100 dark:border-gray-700 relative z-10 animate-in fade-in zoom-in-95 duration-500">
                 <div className="text-center mb-10">
-                    <h2 className="text-4xl font-extrabold text-gray-900 tracking-tight mb-2">Welcome Back</h2>
-                    <p className="text-gray-500 font-medium">Log in to manage your portfolio</p>
+                    <h2 className="text-4xl font-black text-gray-900 dark:text-white tracking-tight mb-2">Welcome Back</h2>
+                    <p className="text-gray-500 dark:text-gray-400 font-medium tracking-wide">Log in to manage your portfolio</p>
                 </div>
 
                 {error && (
-                    <div className="mb-6 p-4 bg-red-50 border border-red-100 rounded-xl flex items-center gap-3 text-red-700 text-sm font-medium animate-in slide-in-from-top-2">
-                        <AlertCircle size={20} />
+                    <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-900/50 rounded-2xl flex items-center gap-3 text-red-700 dark:text-red-400 text-sm font-bold animate-in slide-in-from-top-2 duration-300">
+                        <AlertCircle size={20} className="shrink-0" />
                         {error}
                     </div>
                 )}
@@ -43,14 +45,14 @@ export default function LoginPage() {
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="space-y-4">
                         <div>
-                            <label className="text-sm font-bold text-gray-700 mb-2 block">Email Address</label>
-                            <div className="relative">
-                                <Mail className="absolute left-4 top-3.5 text-gray-400" size={20} />
+                            <label className="text-xs font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2 block">Email Address</label>
+                            <div className="relative group">
+                                <Mail className="absolute left-4 top-3.5 text-gray-400 group-focus-within:text-blue-500 transition-colors" size={20} />
                                 <Input
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    className="pl-12 h-12 bg-gray-50 border-gray-200 focus:bg-white transition-all rounded-xl"
+                                    className="pl-12 h-12 bg-gray-50 dark:bg-slate-900 border-gray-200 dark:border-gray-700 focus:bg-white dark:focus:bg-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500/20 transition-all rounded-xl font-medium"
                                     placeholder="you@example.com"
                                     required
                                 />
@@ -58,21 +60,21 @@ export default function LoginPage() {
                         </div>
                         <div>
                             <div className="flex justify-between items-center mb-2">
-                                <label className="text-sm font-bold text-gray-700 block">Password</label>
+                                <label className="text-xs font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest block">Password</label>
                                 <Link
                                     href="/forgot-password"
-                                    className="text-xs font-bold text-blue-600 hover:text-blue-700 transition-colors"
+                                    className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
                                 >
                                     Forgot password?
                                 </Link>
                             </div>
-                            <div className="relative">
-                                <Lock className="absolute left-4 top-3.5 text-gray-400" size={20} />
+                            <div className="relative group">
+                                <Lock className="absolute left-4 top-3.5 text-gray-400 group-focus-within:text-blue-500 transition-colors" size={20} />
                                 <Input
                                     type="password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="pl-12 h-12 bg-gray-50 border-gray-200 focus:bg-white transition-all rounded-xl"
+                                    className="pl-12 h-12 bg-gray-50 dark:bg-slate-900 border-gray-200 dark:border-gray-700 focus:bg-white dark:focus:bg-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500/20 transition-all rounded-xl font-medium"
                                     placeholder="••••••••"
                                     required
                                 />
@@ -81,17 +83,21 @@ export default function LoginPage() {
                     </div>
 
                     <Button
-                        className="w-full h-12 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold shadow-lg shadow-blue-200 transition-all active:scale-[0.98]"
+                        className="w-full h-12 rounded-xl bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500 text-white font-black shadow-lg shadow-blue-200 dark:shadow-none hover:shadow-blue-300 transition-all active:scale-[0.98] mt-2 group"
                         type="submit"
                         disabled={loading}
                     >
-                        {loading ? 'Logging in...' : 'Sign In'}
+                        {loading ? 'Logging in...' : (
+                            <span className="flex items-center justify-center gap-2">
+                                Sign In
+                            </span>
+                        )}
                     </Button>
                 </form>
 
-                <div className="mt-8 pt-6 border-t border-gray-100 text-center">
-                    <p className="text-sm text-gray-500 font-medium">
-                        Don't have an account? <Link href="/register" className="text-blue-600 font-bold hover:underline ml-1">Create Account</Link>
+                <div className="mt-10 pt-8 border-t border-gray-100 dark:border-gray-700 text-center">
+                    <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">
+                        Don't have an account? <Link href="/register" className="text-blue-600 dark:text-blue-400 font-black hover:underline ml-1">Create Account</Link>
                     </p>
                 </div>
             </div>
