@@ -28,6 +28,7 @@ interface HistoryData {
 export const PortfolioHistoryChart = () => {
     const [data, setData] = useState<HistoryData[]>([]);
     const [range, setRange] = useState<'1D' | '1M' | '3M' | '1Y' | 'ALL'>('1M');
+    const [metric, setMetric] = useState<'value' | 'totalPL'>('value');
     const [loading, setLoading] = useState(true);
     const [isMinimized, setIsMinimized] = useState(true);
 
@@ -62,26 +63,40 @@ export const PortfolioHistoryChart = () => {
                         })}
                     </p>
                     <div className="space-y-1.5">
-                        <div className="flex justify-between gap-8 text-xs">
-                            <span className="text-gray-500 dark:text-gray-400 font-medium">Invested:</span>
-                            <span className="font-bold text-gray-900 dark:text-white">{formatCurrency(payload[0].payload.totalInvested)}</span>
-                        </div>
-                        <div className="flex justify-between gap-8 text-xs">
-                            <span className="text-gray-500 dark:text-gray-400 font-medium">Current:</span>
-                            <span className="font-bold text-blue-600 dark:text-blue-400">{formatCurrency(payload[0].payload.currentValue)}</span>
-                        </div>
-                        <div className="flex justify-between gap-8 text-xs pt-1 border-t border-gray-50 dark:border-gray-700 mt-1">
-                            <span className="text-gray-500 dark:text-gray-400 font-medium">P/L:</span>
-                            <span className={cn("font-bold", payload[0].payload.totalPL >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400")}>
-                                {formatCurrency(payload[0].payload.totalPL)}
-                            </span>
-                        </div>
+                        {metric === 'value' ? (
+                            <>
+                                <div className="flex justify-between gap-8 text-xs">
+                                    <span className="text-gray-500 dark:text-gray-400 font-medium">Invested:</span>
+                                    <span className="font-bold text-gray-900 dark:text-white">{formatCurrency(payload[0].payload.totalInvested)}</span>
+                                </div>
+                                <div className="flex justify-between gap-8 text-xs">
+                                    <span className="text-gray-500 dark:text-gray-400 font-medium">Current:</span>
+                                    <span className="font-bold text-blue-600 dark:text-blue-400">{formatCurrency(payload[0].payload.currentValue)}</span>
+                                </div>
+                                <div className="flex justify-between gap-8 text-xs pt-1 border-t border-gray-50 dark:border-gray-700 mt-1">
+                                    <span className="text-gray-500 dark:text-gray-400 font-medium">P/L:</span>
+                                    <span className={cn("font-bold", payload[0].payload.totalPL >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400")}>
+                                        {formatCurrency(payload[0].payload.totalPL)}
+                                    </span>
+                                </div>
+                            </>
+                        ) : (
+                            <div className="flex justify-between gap-8 text-xs">
+                                <span className="text-gray-500 dark:text-gray-400 font-medium">Total P&L:</span>
+                                <span className={cn("font-bold", payload[0].payload.totalPL >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400")}>
+                                    {formatCurrency(payload[0].payload.totalPL)}
+                                </span>
+                            </div>
+                        )}
                     </div>
                 </div>
             );
         }
         return null;
     };
+
+    const currentPL = data.length > 0 ? data[data.length - 1].totalPL : 0;
+    const chartColor = currentPL >= 0 ? "#10B981" : "#EF4444";
 
     return (
         <div
@@ -103,27 +118,52 @@ export const PortfolioHistoryChart = () => {
                     )}
                 </div>
 
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2 md:gap-4 flex-wrap justify-end">
                     {!isMinimized && (
-                        <div
-                            className="flex bg-gray-100 dark:bg-slate-800 p-1 rounded-xl animate-in fade-in slide-in-from-right-4 duration-300"
-                            onClick={(e) => e.stopPropagation()}
-                        >
-                            {(['1D', '1M', '3M', '1Y', 'ALL'] as const).map((r) => (
-                                <button
-                                    key={r}
-                                    onClick={() => setRange(r)}
-                                    className={cn(
-                                        "px-3 py-1.5 text-xs font-bold rounded-lg transition-all duration-200",
-                                        range === r
-                                            ? "bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm"
-                                            : "text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200"
-                                    )}
-                                >
-                                    {r}
-                                </button>
-                            ))}
-                        </div>
+                        <>
+                            <div
+                                className="flex bg-gray-100 dark:bg-slate-800 p-1 rounded-xl"
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                {[
+                                    { key: "value", label: "Portfolio" },
+                                    { key: "totalPL", label: "Total P&L" }
+                                ].map((item) => (
+                                    <button
+                                        key={item.key}
+                                        onClick={() => setMetric(item.key as 'value' | 'totalPL')}
+                                        className={cn(
+                                            "px-3 py-1 text-xs font-bold rounded-lg transition-all",
+                                            metric === item.key
+                                                ? "bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm"
+                                                : "text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200"
+                                        )}
+                                    >
+                                        {item.label}
+                                    </button>
+                                ))}
+                            </div>
+
+                            <div
+                                className="flex bg-gray-100 dark:bg-slate-800 p-1 rounded-xl animate-in fade-in slide-in-from-right-4 duration-300"
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                {(['1D', '1M', '3M', '1Y', 'ALL'] as const).map((r) => (
+                                    <button
+                                        key={r}
+                                        onClick={() => setRange(r)}
+                                        className={cn(
+                                            "px-3 py-1.5 text-xs font-bold rounded-lg transition-all duration-200",
+                                            range === r
+                                                ? "bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm"
+                                                : "text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200"
+                                        )}
+                                    >
+                                        {r}
+                                    </button>
+                                ))}
+                            </div>
+                        </>
                     )}
 
                     <button
@@ -146,8 +186,8 @@ export const PortfolioHistoryChart = () => {
                             <AreaChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                                 <defs>
                                     <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.3} />
-                                        <stop offset="95%" stopColor="#3B82F6" stopOpacity={0} />
+                                        <stop offset="5%" stopColor={chartColor} stopOpacity={0.4} />
+                                        <stop offset="95%" stopColor={chartColor} stopOpacity={0} />
                                     </linearGradient>
                                 </defs>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#334155" opacity={0.1} />
@@ -165,17 +205,21 @@ export const PortfolioHistoryChart = () => {
                                     minTickGap={30}
                                 />
                                 <YAxis
-                                    tickFormatter={(val) => `₹${(val / 1000).toFixed(0)}k`}
+                                    tickFormatter={(val) =>
+                                        metric === 'value'
+                                            ? `₹${(val / 1000).toFixed(0)}k`
+                                            : formatCurrency(val)
+                                    }
                                     tick={{ fontSize: 10, fill: '#94A3B8', fontWeight: 600 }}
                                     axisLine={false}
                                     tickLine={false}
                                     domain={['auto', 'auto']}
                                 />
-                                <Tooltip content={<CustomTooltip />} cursor={{ stroke: '#3B82F6', strokeWidth: 2, strokeDasharray: '5 5' }} />
+                                <Tooltip content={<CustomTooltip />} cursor={{ stroke: chartColor, strokeWidth: 2, strokeDasharray: '5 5' }} />
                                 <Area
                                     type="monotone"
-                                    dataKey="currentValue"
-                                    stroke="#3B82F6"
+                                    dataKey={metric === 'value' ? 'currentValue' : 'totalPL'}
+                                    stroke={chartColor}
                                     strokeWidth={3}
                                     fillOpacity={1}
                                     fill="url(#colorValue)"
