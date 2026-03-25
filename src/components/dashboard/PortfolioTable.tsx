@@ -51,24 +51,30 @@ export const PortfolioTable = ({ stocks, onSell, onAddMore, onSort, sortConfig }
             <table className="w-full text-left border-collapse text-sm">
                 <thead className="sticky top-0 bg-white dark:bg-slate-800 z-10 shadow-sm transition-colors duration-300">
                     <tr className="border-b border-gray-100 dark:border-gray-700 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                        <th
-                            className="px-6 py-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors"
-                            onClick={() => onSort('name')}
-                        >
+                        <th className="px-6 py-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors" onClick={() => onSort('name')}>
                             Stock {renderSortArrow('name')}
                         </th>
-                        <th className="px-6 py-4">Qty</th>
-                        <th className="px-6 py-4">Avg Price</th>
-                        <th className="px-6 py-4">LTP</th>
-                        <th
-                            className="px-6 py-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors"
-                            onClick={() => onSort('pl')}
-                        >
+                        <th className="px-6 py-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors" onClick={() => onSort('qty')}>
+                            Qty {renderSortArrow('qty')}
+                        </th>
+                        <th className="px-6 py-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors" onClick={() => onSort('averagePrice')}>
+                            Avg Price {renderSortArrow('averagePrice')}
+                        </th>
+                        <th className="px-6 py-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors" onClick={() => onSort('ltp')}>
+                            LTP {renderSortArrow('ltp')}
+                        </th>
+                        <th className="px-6 py-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors" onClick={() => onSort('pl')}>
                             P&L (%) {renderSortArrow('pl')}
                         </th>
-                        <th className="px-6 py-4">Current Value</th>
-                        <th className="px-6 py-4">Realized P&L</th>
-                        <th className="px-6 py-4">Last Updated</th>
+                        <th className="px-6 py-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors" onClick={() => onSort('currentValue')}>
+                            Current Value {renderSortArrow('currentValue')}
+                        </th>
+                        <th className="px-6 py-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors" onClick={() => onSort('realizedPL')}>
+                            Realized P&L {renderSortArrow('realizedPL')}
+                        </th>
+                        <th className="px-6 py-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors" onClick={() => onSort('lastUpdatedAt')}>
+                            Last Updated {renderSortArrow('lastUpdatedAt')}
+                        </th>
                         <th className="px-6 py-4 text-right">Actions</th>
                     </tr>
                 </thead>

@@ -21,14 +21,14 @@ interface HistoryData {
     date: string;
     totalInvested: number;
     currentValue: number;
-    totalPL: number;
+    derivedPL: number;
     dayChange: number;
 }
 
 export const PortfolioHistoryChart = () => {
     const [data, setData] = useState<HistoryData[]>([]);
     const [range, setRange] = useState<'1D' | '1M' | '3M' | '1Y' | 'ALL'>('1M');
-    const [metric, setMetric] = useState<'value' | 'totalPL'>('value');
+    const [metric, setMetric] = useState<'value' | 'derivedPL'>('value');
     const [loading, setLoading] = useState(true);
     const [isMinimized, setIsMinimized] = useState(true);
 
@@ -39,7 +39,13 @@ export const PortfolioHistoryChart = () => {
             setLoading(true);
             try {
                 const response = await api.get(`/portfolio/history?range=${range}`);
-                setData(response.data);
+
+                const transformedData = response.data.map((item: any) => ({
+                    ...item,
+                    derivedPL: item.currentValue - item.totalInvested,
+                }));
+
+                setData(transformedData);
             } catch (error) {
                 console.error('Failed to fetch history:', error);
             } finally {
@@ -74,17 +80,17 @@ export const PortfolioHistoryChart = () => {
                                     <span className="font-bold text-blue-600 dark:text-blue-400">{formatCurrency(payload[0].payload.currentValue)}</span>
                                 </div>
                                 <div className="flex justify-between gap-8 text-xs pt-1 border-t border-gray-50 dark:border-gray-700 mt-1">
-                                    <span className="text-gray-500 dark:text-gray-400 font-medium">P/L:</span>
-                                    <span className={cn("font-bold", payload[0].payload.totalPL >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400")}>
-                                        {formatCurrency(payload[0].payload.totalPL)}
+                                    <span className="text-gray-500 dark:text-gray-400 font-medium">Holdings P/L:</span>
+                                    <span className={cn("font-bold", payload[0].payload.derivedPL >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400")}>
+                                        {formatCurrency(payload[0].payload.derivedPL)}
                                     </span>
                                 </div>
                             </>
                         ) : (
                             <div className="flex justify-between gap-8 text-xs">
-                                <span className="text-gray-500 dark:text-gray-400 font-medium">Total P&L:</span>
-                                <span className={cn("font-bold", payload[0].payload.totalPL >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400")}>
-                                    {formatCurrency(payload[0].payload.totalPL)}
+                                <span className="text-gray-500 dark:text-gray-400 font-medium">Holdings P&L:</span>
+                                <span className={cn("font-bold", payload[0].payload.derivedPL >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400")}>
+                                    {formatCurrency(payload[0].payload.derivedPL)}
                                 </span>
                             </div>
                         )}
@@ -95,7 +101,7 @@ export const PortfolioHistoryChart = () => {
         return null;
     };
 
-    const currentPL = data.length > 0 ? data[data.length - 1].totalPL : 0;
+    const currentPL = data.length > 0 ? data[data.length - 1].derivedPL : 0;
     const chartColor = currentPL >= 0 ? "#10B981" : "#EF4444";
 
     return (
@@ -127,11 +133,11 @@ export const PortfolioHistoryChart = () => {
                             >
                                 {[
                                     { key: "value", label: "Portfolio" },
-                                    { key: "totalPL", label: "Total P&L" }
+                                    { key: "derivedPL", label: "Holdings P&L" }
                                 ].map((item) => (
                                     <button
                                         key={item.key}
-                                        onClick={() => setMetric(item.key as 'value' | 'totalPL')}
+                                        onClick={() => setMetric(item.key as 'value' | 'derivedPL')}
                                         className={cn(
                                             "px-3 py-1 text-xs font-bold rounded-lg transition-all",
                                             metric === item.key
@@ -218,7 +224,7 @@ export const PortfolioHistoryChart = () => {
                                 <Tooltip content={<CustomTooltip />} cursor={{ stroke: chartColor, strokeWidth: 2, strokeDasharray: '5 5' }} />
                                 <Area
                                     type="monotone"
-                                    dataKey={metric === 'value' ? 'currentValue' : 'totalPL'}
+                                    dataKey={metric === 'value' ? 'currentValue' : 'derivedPL'}
                                     stroke={chartColor}
                                     strokeWidth={3}
                                     fillOpacity={1}

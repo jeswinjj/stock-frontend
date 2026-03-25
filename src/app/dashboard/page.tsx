@@ -185,12 +185,16 @@ export default function Dashboard() {
 
                 <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
                     <SummaryCard title="Invested" value={summary?.totalInvested || 0} />
-                    <SummaryCard title="Current Value" value={summary?.currentValue || 0} />
                     <SummaryCard
-                        title="Total P&L"
-                        value={summary?.totalPL || 0}
-                        subValue={`${summary?.plPercentage?.toFixed(2)}%`}
-                        isProfit={summary?.totalPL >= 0}
+                        title="Current Value"
+                        value={summary?.currentValue || 0}
+                        isProfit={summary?.unrealizedPL >= 0}
+                    />
+                    <SummaryCard
+                        title="Holdings P&L"
+                        value={summary?.unrealizedPL || 0}
+                        subValue={summary?.totalInvested > 0 ? `${(summary.unrealizedPL / summary.totalInvested * 100).toFixed(2)}%` : "0.00%"}
+                        isProfit={summary?.unrealizedPL >= 0}
                     />
                     <SummaryCard
                         title="Today's Change"
