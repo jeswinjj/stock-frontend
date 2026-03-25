@@ -22,11 +22,6 @@ export const WalletCard = () => {
         };
 
         fetchBalance();
-
-        // Listen for wallet updates event if we implement real-time updates later
-        // or just re-fetch on focus window
-        window.addEventListener('focus', fetchBalance);
-        return () => window.removeEventListener('focus', fetchBalance);
     }, []);
 
     return (

@@ -26,10 +26,10 @@ export default function WalletPage() {
     const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
     const [toast, setToast] = useState<{ type: 'success' | 'error', message: string } | null>(null);
 
-    const showToast = (message: string, type: 'success' | 'error' = 'success') => {
+    const showToast = useCallback((message: string, type: 'success' | 'error' = 'success') => {
         setToast({ type, message });
         setTimeout(() => setToast(null), 5000);
-    };
+    }, []);
 
     const fetchWalletData = useCallback(async () => {
         try {
@@ -38,11 +38,12 @@ export default function WalletPage() {
             setTransactions(response.data.transactions);
         } catch (error) {
             console.error('Failed to fetch wallet data:', error);
-            showToast('Failed to fetch wallet data.', 'error');
+            // Don't show toast for initial fetch failure to avoid loops
+            // or just be careful with it.
         } finally {
             setLoading(false);
         }
-    }, [showToast]);
+    }, []);
 
     useEffect(() => {
         if (user) {
