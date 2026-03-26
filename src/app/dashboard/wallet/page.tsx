@@ -222,32 +222,32 @@ export default function WalletPage() {
     if (loading || authLoading) return <div className="flex items-center justify-center h-screen font-medium text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-slate-900">Loading wallet...</div>;
 
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-slate-900 text-gray-900 dark:text-gray-100 p-6 md:p-12 transition-colors duration-300">
-            <div className="max-w-6xl mx-auto space-y-8">
+        <div className="min-h-screen bg-gray-50 dark:bg-slate-900 text-gray-900 dark:text-gray-100 p-4 md:p-12 transition-colors duration-300">
+            <div className="max-w-6xl mx-auto space-y-6 md:space-y-8">
                 {/* Toast Notification */}
                 {toast && (
                     <div className={cn(
-                        "fixed top-6 right-6 z-[100] p-4 rounded-2xl shadow-2xl flex items-center gap-3 border animate-in slide-in-from-right-8 duration-300 backdrop-blur-md",
+                        "fixed top-4 md:top-6 right-4 md:right-6 z-[100] p-4 rounded-2xl shadow-2xl flex items-center gap-3 border animate-in slide-in-from-right-8 duration-300 backdrop-blur-md",
                         toast.type === 'success'
                             ? "bg-white/90 dark:bg-slate-800/90 border-green-100 dark:border-green-900/50 text-green-700 dark:text-green-400"
                             : "bg-white/90 dark:bg-slate-800/90 border-red-100 dark:border-red-900/50 text-red-700 dark:text-red-400"
                     )}>
-                        <p className="font-bold">{toast.message}</p>
+                        <p className="font-bold text-sm md:text-base">{toast.message}</p>
                     </div>
                 )}
 
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
-                    <div className="flex items-center gap-4">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div className="flex items-center gap-3 md:gap-4">
                         <Link href="/dashboard">
-                            <Button variant="outline" className="h-10 w-10 p-0 rounded-xl">
-                                <ArrowLeft size={20} />
+                            <Button variant="outline" className="h-9 w-9 md:h-10 md:w-10 p-0 rounded-xl">
+                                <ArrowLeft className="w-[18px] h-[18px] md:w-[20px] md:h-[20px]" />
                             </Button>
                         </Link>
-                        <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">Wallet</h1>
+                        <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">Wallet</h1>
                     </div>
                     <Button
                         onClick={handleExportExcel}
-                        className="bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl px-6"
+                        className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl px-6 py-5 md:py-2"
                         disabled={filteredTransactions.length === 0}
                     >
                         <Download size={18} className="mr-2" /> Export to Excel
@@ -255,29 +255,29 @@ export default function WalletPage() {
                 </div>
 
                 {/* Balance Card */}
-                <div className="bg-white dark:bg-slate-800 p-8 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-lg relative overflow-hidden">
-                    <div className="absolute top-0 right-0 p-8 opacity-5">
-                        <Wallet size={200} />
+                <div className="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-lg relative overflow-hidden">
+                    <div className="absolute top-0 right-0 p-8 opacity-5 pointer-events-none">
+                        <Wallet className="w-[150px] h-[150px] md:w-[200px] md:h-[200px]" />
                     </div>
 
                     <div className="relative z-10">
-                        <p className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Total Balance</p>
-                        <h2 className="text-5xl font-black text-gray-900 dark:text-white mb-8">
+                        <p className="text-[10px] md:text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1 md:mb-2">Total Balance</p>
+                        <h2 className="text-3xl md:text-5xl font-black text-gray-900 dark:text-white mb-6 md:mb-8">
                             {formatCurrency(balance)}
                         </h2>
 
-                        <div className="flex flex-wrap gap-4">
+                        <div className="flex flex-wrap gap-3 md:gap-4">
                             <Button
-                                className="h-12 px-8 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl shadow-md hover:shadow-lg transition-all"
+                                className="flex-1 md:flex-none h-11 md:h-12 px-4 md:px-8 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl shadow-md hover:shadow-lg transition-all text-sm md:text-base"
                                 onClick={() => setIsAddModalOpen(true)}
                             >
-                                <ArrowDownLeft className="mr-2" size={20} /> Add Funds
+                                <ArrowDownLeft className="mr-2 w-[18px] h-[18px] md:w-[20px] md:h-[20px]" /> Add Funds
                             </Button>
                             <Button
-                                className="h-12 px-8 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl shadow-md hover:shadow-lg transition-all"
+                                className="flex-1 md:flex-none h-11 md:h-12 px-4 md:px-8 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl shadow-md hover:shadow-lg transition-all text-sm md:text-base"
                                 onClick={() => setIsWithdrawModalOpen(true)}
                             >
-                                <ArrowUpRight className="mr-2" size={20} /> Withdraw
+                                <ArrowUpRight className="mr-2 w-[18px] h-[18px] md:w-[20px] md:h-[20px]" /> Withdraw
                             </Button>
                         </div>
                     </div>
@@ -286,22 +286,22 @@ export default function WalletPage() {
                 {/* Transactions Table Section */}
                 <div className="space-y-4">
                     {/* Header with Tabs and Sub-filters */}
-                    <div className="bg-white dark:bg-slate-800 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden sticky top-4 z-40">
-                        <div className="p-6 border-b border-gray-50 dark:border-gray-700 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
-                            <div className="flex items-center gap-4">
-                                <History className="text-blue-500" size={24} />
-                                <h2 className="text-xl font-bold text-gray-800 dark:text-white whitespace-nowrap">History</h2>
+                    <div className="bg-white dark:bg-slate-800 rounded-2xl md:rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden sticky top-2 md:top-4 z-40">
+                        <div className="p-4 md:p-6 border-b border-gray-50 dark:border-gray-700 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 md:gap-6">
+                            <div className="flex items-center gap-3 md:gap-4">
+                                <History className="text-blue-500 w-[20px] h-[20px] md:w-[24px] md:h-[24px]" />
+                                <h2 className="text-lg md:text-xl font-bold text-gray-800 dark:text-white whitespace-nowrap">History</h2>
                             </div>
 
-                            <div className="flex flex-wrap items-center gap-4 w-full lg:w-auto">
+                            <div className="flex flex-col sm:flex-row items-center gap-3 md:gap-4 w-full lg:w-auto">
                                 {/* Wallet vs Trades Tab */}
-                                <div className="flex bg-gray-100 dark:bg-slate-900/50 p-1.5 rounded-2xl flex-1 md:flex-none">
+                                <div className="flex bg-gray-100 dark:bg-slate-900/50 p-1 rounded-xl md:rounded-2xl w-full sm:w-auto">
                                     {(['wallet', 'trades'] as const).map(tab => (
                                         <button
                                             key={tab}
                                             onClick={() => setActiveTab(tab)}
                                             className={cn(
-                                                "px-6 py-2.5 text-sm font-black rounded-xl transition-all grow text-center",
+                                                "px-4 md:px-6 py-2 md:py-2.5 text-xs md:text-sm font-black rounded-lg md:rounded-xl transition-all grow text-center",
                                                 activeTab === tab
                                                     ? "bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm"
                                                     : "text-gray-500 hover:text-gray-800 dark:hover:text-gray-200"
@@ -314,14 +314,14 @@ export default function WalletPage() {
 
                                 {/* Buy/Sell Filter (Only for Trades) */}
                                 {activeTab === 'trades' && (
-                                    <div className="flex items-center gap-2 bg-gray-100 dark:bg-slate-900/50 p-1.5 rounded-2xl flex-1 md:flex-none">
-                                        <Filter size={16} className="ml-2 text-gray-400" />
+                                    <div className="flex items-center gap-1 bg-gray-100 dark:bg-slate-900/50 p-1 rounded-xl md:rounded-2xl w-full sm:w-auto">
+                                        <Filter size={14} className="ml-2 text-gray-400 hidden sm:block" />
                                         {(['all', 'buy', 'sell'] as const).map(f => (
                                             <button
                                                 key={f}
                                                 onClick={() => setTradeFilter(f)}
                                                 className={cn(
-                                                    "px-4 py-2 text-xs font-bold rounded-lg transition-all capitalize",
+                                                    "px-3 md:px-4 py-1.5 md:py-2 text-[10px] md:text-xs font-bold rounded-lg transition-all capitalize grow text-center",
                                                     tradeFilter === f
                                                         ? "bg-blue-600 text-white shadow-md"
                                                         : "text-gray-500 hover:text-gray-800 dark:hover:text-gray-200"
@@ -339,9 +339,9 @@ export default function WalletPage() {
                     {/* Grouped Lists */}
                     <div className="space-y-4">
                         {Object.keys(groupedData).length === 0 ? (
-                            <div className="bg-white dark:bg-slate-800 p-20 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm text-center">
-                                <History size={48} className="mx-auto mb-4 text-gray-300 opacity-50" />
-                                <p className="text-gray-400 font-medium italic">No transactions match your current filters.</p>
+                            <div className="bg-white dark:bg-slate-800 p-12 md:p-20 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm text-center">
+                                <History className="mx-auto mb-4 text-gray-300 opacity-50 w-[40px] h-[40px] md:w-[48px] md:h-[48px]" />
+                                <p className="text-gray-400 font-medium italic text-sm md:text-base">No transactions match your current filters.</p>
                             </div>
                         ) : (
                             Object.keys(groupedData).sort((a, b) => dayjs(b, 'MMMM YYYY').unix() - dayjs(a, 'MMMM YYYY').unix()).map(month => {
@@ -350,104 +350,172 @@ export default function WalletPage() {
                                 const monthPL = monthTransactions.reduce((acc, tx) => acc + (tx.totalPL || 0), 0);
 
                                 return (
-                                    <div key={month} className="bg-white dark:bg-slate-800 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden transition-all duration-300">
+                                    <div key={month} className="bg-white dark:bg-slate-800 rounded-2xl md:rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden transition-all duration-300">
                                         {/* Month Header */}
                                         <button
                                             onClick={() => toggleMonth(month)}
-                                            className="w-full p-6 flex justify-between items-center hover:bg-gray-50 dark:hover:bg-slate-800/80 transition-colors group"
+                                            className="w-full p-4 md:p-6 flex justify-between items-center hover:bg-gray-50 dark:hover:bg-slate-800/80 transition-colors group"
                                         >
-                                            <div className="flex items-center gap-4">
-                                                <div className="p-2 bg-gray-50 dark:bg-slate-900 rounded-lg group-hover:bg-white dark:group-hover:bg-slate-800 transition-colors shadow-sm">
-                                                    {isExpanded ? <ChevronDown className="text-blue-500" size={20} /> : <ChevronRight className="text-gray-400" size={20} />}
+                                            <div className="flex items-center gap-3 md:gap-4">
+                                                <div className="p-1.5 md:p-2 bg-gray-50 dark:bg-slate-900 rounded-lg group-hover:bg-white dark:group-hover:bg-slate-800 transition-colors shadow-sm">
+                                                    {isExpanded ? <ChevronDown className="text-blue-500 w-[18px] h-[18px] md:w-[20px] md:h-[20px]" /> : <ChevronRight className="text-gray-400 w-[18px] h-[18px] md:w-[20px] md:h-[20px]" />}
                                                 </div>
-                                                <h3 className="text-lg font-bold text-gray-800 dark:text-white">{month}</h3>
-                                                <span className="text-xs font-medium px-2 py-0.5 bg-gray-100 dark:bg-slate-900 text-gray-500 dark:text-gray-400 rounded-md">
-                                                    {monthTransactions.length} txs
-                                                </span>
+                                                <div className="text-left">
+                                                    <h3 className="text-base md:text-lg font-bold text-gray-800 dark:text-white leading-tight">{month}</h3>
+                                                    <span className="text-[10px] font-medium px-1.5 py-0.5 bg-gray-100 dark:bg-slate-900 text-gray-500 dark:text-gray-400 rounded-md">
+                                                        {monthTransactions.length} txs
+                                                    </span>
+                                                </div>
                                             </div>
 
                                             {activeTab === 'trades' && monthPL !== 0 && (
                                                 <div className="text-right">
-                                                    <p className="text-[10px] uppercase font-black tracking-widest text-gray-400 mb-1">Monthly Net P/L</p>
-                                                    <p className={cn("text-sm font-black", monthPL >= 0 ? "text-green-500" : "text-red-500")}>
+                                                    <p className="text-[8px] md:text-[10px] uppercase font-black tracking-widest text-gray-400 mb-0.5 md:mb-1">Monthly Net P/L</p>
+                                                    <p className={cn("text-xs md:text-sm font-black", monthPL >= 0 ? "text-green-500" : "text-red-500")}>
                                                         {monthPL >= 0 ? '+' : ''}{formatCurrency(monthPL)}
                                                     </p>
                                                 </div>
                                             )}
                                         </button>
 
-                                        {/* Table (Collapsible) */}
+                                        {/* Content (Collapsible) */}
                                         {isExpanded && (
-                                            <div className="overflow-x-auto border-t border-gray-50 dark:border-gray-700 animate-in slide-in-from-top-2 duration-300">
-                                                <table className="w-full text-left border-collapse table-fixed min-w-[700px] lg:min-w-full">
-                                                    <thead>
-                                                        <tr className="border-b border-gray-50 dark:border-gray-700/50 bg-gray-50/30 dark:bg-slate-900/50">
-                                                            <th className="p-6 w-[180px] text-[10px] font-black text-gray-400 uppercase tracking-[2px]">Date</th>
-                                                            <th className="p-6 text-[10px] font-black text-gray-400 uppercase tracking-[2px]">Action</th>
-                                                            {activeTab === 'trades' && (
-                                                                <>
-                                                                    <th className="p-6 w-[100px] text-[10px] font-black text-gray-400 uppercase tracking-[2px] text-right">Shares</th>
-                                                                    <th className="p-6 w-[120px] text-[10px] font-black text-gray-400 uppercase tracking-[2px] text-right">Buy Price</th>
-                                                                    <th className="p-6 w-[120px] text-[10px] font-black text-gray-400 uppercase tracking-[2px] text-right">Sell Price</th>
-                                                                    <th className="p-6 w-[150px] text-[10px] font-black text-gray-400 uppercase tracking-[2px] text-right">P/L</th>
-                                                                </>
-                                                            )}
-                                                            <th className="p-6 w-[150px] text-[10px] font-black text-gray-400 uppercase tracking-[2px] text-right">Net Value</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody className="divide-y divide-gray-50 dark:divide-gray-700/30">
-                                                        {monthTransactions.map((tx) => (
-                                                            <tr key={tx.id} className="hover:bg-gray-50/50 dark:hover:bg-slate-700/20 transition-colors">
-                                                                <td className="p-6 text-xs font-bold text-gray-500 dark:text-gray-400">
+                                            <div className="border-t border-gray-50 dark:border-gray-700 animate-in slide-in-from-top-2 duration-300">
+                                                {/* Mobile Card List */}
+                                                <div className="md:hidden divide-y divide-gray-50 dark:divide-gray-700/30">
+                                                    {monthTransactions.map((tx) => (
+                                                        <div key={tx.id} className="p-4 bg-white dark:bg-slate-800 transition-colors">
+                                                            <div className="flex justify-between items-start mb-3">
+                                                                <span className={cn(
+                                                                    "inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-black gap-1",
+                                                                    getTransactionColor(tx)
+                                                                )}>
+                                                                    {getTransactionIcon(tx)}
+                                                                    {tx.type.replace('_', ' ')}
+                                                                </span>
+                                                                <span className="text-[9px] font-bold text-gray-400">
                                                                     {tx.displayDate}
-                                                                </td>
-                                                                <td className="p-6">
-                                                                    <div className="flex flex-col gap-1">
-                                                                        <span className={cn(
-                                                                            "inline-flex items-center w-fit px-2.5 py-1 rounded-full text-[10px] font-black gap-1.5",
-                                                                            getTransactionColor(tx)
-                                                                        )}>
-                                                                            {getTransactionIcon(tx)}
-                                                                            {tx.type.replace('_', ' ')}
-                                                                        </span>
-                                                                        <span className="text-[11px] font-bold text-gray-800 dark:text-gray-200 truncate pr-4">
-                                                                            {tx.symbol}
-                                                                        </span>
+                                                                </span>
+                                                            </div>
+
+                                                            <div className="flex justify-between items-end gap-2">
+                                                                <div className="flex flex-col min-w-0">
+                                                                    <span className="text-[9px] font-medium text-gray-400 uppercase tracking-wider mb-0.5">Stock Name</span>
+                                                                    <span className="text-sm font-black text-gray-800 dark:text-gray-200 truncate">
+                                                                        {tx.symbol}
+                                                                    </span>
+                                                                </div>
+                                                                <div className="text-right">
+                                                                    <span className="text-[9px] font-medium text-gray-400 uppercase tracking-wider block mb-0.5">Impact</span>
+                                                                    <span className={cn(
+                                                                        "text-base font-black whitespace-nowrap",
+                                                                        tx.type === 'BUY' ? "text-blue-600 dark:text-blue-400" : tx.displayPL !== null ? (tx.displayPL >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400") : tx.displayNetValue > 0 ? "text-green-600 dark:text-green-400" : tx.displayNetValue < 0 ? "text-red-600 dark:text-red-400" : "text-gray-900 dark:text-white"
+                                                                    )}>
+                                                                        {tx.displayNetValue >= 0 ? '+' : ''}{formatCurrency(tx.displayNetValue)}
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                            {activeTab === 'trades' && (
+                                                                <div className="grid grid-cols-2 gap-y-3 gap-x-6 mt-4 pt-3 border-t border-gray-50 dark:border-gray-700/30">
+                                                                    <div>
+                                                                        <span className="text-[8px] font-medium text-gray-400 uppercase tracking-wider block mb-0.5">Shares</span>
+                                                                        <span className="text-xs font-bold text-gray-700 dark:text-gray-200">{tx.quantity || '—'}</span>
                                                                     </div>
-                                                                </td>
+                                                                    <div className="text-right">
+                                                                        <span className="text-[8px] font-medium text-gray-400 uppercase tracking-wider block mb-0.5">P/L</span>
+                                                                        {tx.displayPL !== null ? (
+                                                                            <span className={cn("text-xs font-black", tx.displayPL >= 0 ? "text-green-500" : "text-red-500")}>
+                                                                                {tx.displayPL >= 0 ? '+' : ''}{tx.displayPL.toFixed(2)}
+                                                                            </span>
+                                                                        ) : <span className="text-xs font-bold text-gray-300">—</span>}
+                                                                    </div>
+                                                                    <div>
+                                                                        <span className="text-[8px] font-medium text-gray-400 uppercase tracking-wider block mb-0.5">Buy Price</span>
+                                                                        <span className="text-xs font-bold text-gray-500 dark:text-gray-400">{tx.displayBuyPrice ? formatCurrency(tx.displayBuyPrice) : '—'}</span>
+                                                                    </div>
+                                                                    <div className="text-right">
+                                                                        <span className="text-[8px] font-medium text-gray-400 uppercase tracking-wider block mb-0.5">Sell Price</span>
+                                                                        <span className="text-xs font-bold text-gray-500 dark:text-gray-400">{tx.displaySellPrice ? formatCurrency(tx.displaySellPrice) : '—'}</span>
+                                                                    </div>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    ))}
+                                                </div>
+
+                                                {/* Desktop Table View */}
+                                                <div className="hidden md:block overflow-x-auto">
+                                                    <table className="w-full text-left border-collapse table-fixed min-w-full">
+                                                        <thead>
+                                                            <tr className="border-b border-gray-50 dark:border-gray-700/50 bg-gray-50/30 dark:bg-slate-900/50">
+                                                                <th className="p-6 w-[180px] text-[10px] font-black text-gray-400 uppercase tracking-[2px]">Date</th>
+                                                                <th className="p-6 text-[10px] font-black text-gray-400 uppercase tracking-[2px]">Action</th>
                                                                 {activeTab === 'trades' && (
                                                                     <>
-                                                                        <td className="p-6 text-sm font-bold text-gray-800 dark:text-gray-200 text-right">
-                                                                            {tx.quantity || '—'}
-                                                                        </td>
-                                                                        <td className="p-6 text-sm font-bold text-gray-400 dark:text-gray-500 text-right">
-                                                                            {tx.displayBuyPrice ? formatCurrency(tx.displayBuyPrice) : '—'}
-                                                                        </td>
-                                                                        <td className="p-6 text-sm font-bold text-gray-400 dark:text-gray-500 text-right">
-                                                                            {tx.displaySellPrice ? formatCurrency(tx.displaySellPrice) : '—'}
-                                                                        </td>
-                                                                        <td className="p-6 text-right">
-                                                                            {tx.displayPL !== null ? (
-                                                                                <div className="flex flex-col items-end">
-                                                                                    <span className={cn("text-sm font-black", tx.displayPL >= 0 ? "text-green-500" : "text-red-500")}>
-                                                                                        {tx.displayPL >= 0 ? 'P/L: +' : 'P/L: '}{tx.displayPL.toFixed(2)}
-                                                                                    </span>
-                                                                                    <span className="text-[10px] font-medium text-gray-400 italic">Financial Snapshot</span>
-                                                                                </div>
-                                                                            ) : '—'}
-                                                                        </td>
+                                                                        <th className="p-6 w-[100px] text-[10px] font-black text-gray-400 uppercase tracking-[2px] text-right">Shares</th>
+                                                                        <th className="p-6 w-[120px] text-[10px] font-black text-gray-400 uppercase tracking-[2px] text-right">Buy Price</th>
+                                                                        <th className="p-6 w-[120px] text-[10px] font-black text-gray-400 uppercase tracking-[2px] text-right">Sell Price</th>
+                                                                        <th className="p-6 w-[150px] text-[10px] font-black text-gray-400 uppercase tracking-[2px] text-right">P/L</th>
                                                                     </>
                                                                 )}
-                                                                <td className={cn(
-                                                                    "p-6 text-base font-black text-right whitespace-nowrap",
-                                                                    tx.type === 'BUY' ? "text-blue-600 dark:text-blue-400" : tx.displayPL !== null ? (tx.displayPL >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400") : tx.displayNetValue > 0 ? "text-green-600 dark:text-green-400" : tx.displayNetValue < 0 ? "text-red-600 dark:text-red-400" : "text-gray-900 dark:text-white"
-                                                                )}>
-                                                                    {tx.displayNetValue >= 0 ? '+' : ''}{formatCurrency(tx.displayNetValue)}
-                                                                </td>
+                                                                <th className="p-6 w-[150px] text-[10px] font-black text-gray-400 uppercase tracking-[2px] text-right">Net Value</th>
                                                             </tr>
-                                                        ))}
-                                                    </tbody>
-                                                </table>
+                                                        </thead>
+                                                        <tbody className="divide-y divide-gray-50 dark:divide-gray-700/30">
+                                                            {monthTransactions.map((tx) => (
+                                                                <tr key={tx.id} className="hover:bg-gray-50/50 dark:hover:bg-slate-700/20 transition-colors">
+                                                                    <td className="p-6 text-xs font-bold text-gray-500 dark:text-gray-400">
+                                                                        {tx.displayDate}
+                                                                    </td>
+                                                                    <td className="p-6">
+                                                                        <div className="flex flex-col gap-1 min-w-0">
+                                                                            <span className={cn(
+                                                                                "inline-flex items-center w-fit px-2.5 py-1 rounded-full text-[10px] font-black gap-1.5",
+                                                                                getTransactionColor(tx)
+                                                                            )}>
+                                                                                {getTransactionIcon(tx)}
+                                                                                {tx.type.replace('_', ' ')}
+                                                                            </span>
+                                                                            <span className="text-[11px] font-bold text-gray-800 dark:text-gray-200 truncate pr-4">
+                                                                                {tx.symbol}
+                                                                            </span>
+                                                                        </div>
+                                                                    </td>
+                                                                    {activeTab === 'trades' && (
+                                                                        <>
+                                                                            <td className="p-6 text-sm font-bold text-gray-800 dark:text-gray-200 text-right">
+                                                                                {tx.quantity || '—'}
+                                                                            </td>
+                                                                            <td className="p-6 text-sm font-bold text-gray-400 dark:text-gray-500 text-right">
+                                                                                {tx.displayBuyPrice ? formatCurrency(tx.displayBuyPrice) : '—'}
+                                                                            </td>
+                                                                            <td className="p-6 text-sm font-bold text-gray-400 dark:text-gray-500 text-right">
+                                                                                {tx.displaySellPrice ? formatCurrency(tx.displaySellPrice) : '—'}
+                                                                            </td>
+                                                                            <td className="p-6 text-right">
+                                                                                {tx.displayPL !== null ? (
+                                                                                    <div className="flex flex-col items-end">
+                                                                                        <span className={cn("text-sm font-black", tx.displayPL >= 0 ? "text-green-500" : "text-red-500")}>
+                                                                                            {tx.displayPL >= 0 ? 'P/L: +' : 'P/L: '}{tx.displayPL.toFixed(2)}
+                                                                                        </span>
+                                                                                        <span className="text-[10px] font-medium text-gray-400 italic">Financial Snapshot</span>
+                                                                                    </div>
+                                                                                ) : '—'}
+                                                                            </td>
+                                                                        </>
+                                                                    )}
+                                                                    <td className={cn(
+                                                                        "p-6 text-base font-black text-right whitespace-nowrap",
+                                                                        tx.type === 'BUY' ? "text-blue-600 dark:text-blue-400" : tx.displayPL !== null ? (tx.displayPL >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400") : tx.displayNetValue > 0 ? "text-green-600 dark:text-green-400" : tx.displayNetValue < 0 ? "text-red-600 dark:text-red-400" : "text-gray-900 dark:text-white"
+                                                                    )}>
+                                                                        {tx.displayNetValue >= 0 ? '+' : ''}{formatCurrency(tx.displayNetValue)}
+                                                                    </td>
+                                                                </tr>
+                                                            ))}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
                                             </div>
                                         )}
                                     </div>

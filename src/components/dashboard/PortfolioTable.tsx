@@ -48,7 +48,8 @@ export const PortfolioTable = ({ stocks, onSell, onAddMore, onSort, sortConfig }
 
     return (
         <div className="overflow-x-auto max-h-[600px] scrollbar-thin scrollbar-thumb-gray-200 dark:scrollbar-thumb-slate-600">
-            <table className="w-full text-left border-collapse text-sm">
+            {/* Desktop Table View */}
+            <table className="hidden md:table w-full text-left border-collapse text-sm">
                 <thead className="sticky top-0 bg-white dark:bg-slate-800 z-10 shadow-sm transition-colors duration-300">
                     <tr className="border-b border-gray-100 dark:border-gray-700 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                         <th className="px-6 py-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors" onClick={() => onSort('name')}>
@@ -136,6 +137,75 @@ export const PortfolioTable = ({ stocks, onSell, onAddMore, onSort, sortConfig }
                     })}
                 </tbody>
             </table>
+
+            {/* Mobile Card View */}
+            <div className="md:hidden divide-y divide-gray-100 dark:divide-gray-700/50">
+                {stocks.map((stock: any) => {
+                    const plPercentage = ((stock.currentPrice - stock.averagePrice) / stock.averagePrice) * 100;
+                    const isProfit = stock.unrealizedPL >= 0;
+                    const isDayUp = (stock.dayChange || 0) >= 0;
+
+                    return (
+                        <div key={stock.symbol} className="p-4 bg-white dark:bg-slate-800 transition-colors">
+                            <div className="flex justify-between items-start mb-3">
+                                <div>
+                                    <h3 className="text-base font-black text-gray-900 dark:text-white leading-tight">{stock.symbol}</h3>
+                                    <p className="text-[10px] text-gray-500 dark:text-gray-400 font-medium truncate max-w-[150px]">{stock.name}</p>
+                                </div>
+                                <div className="text-right">
+                                    <p className="text-base font-black text-gray-900 dark:text-white">{maskValue(stock.currentValue)}</p>
+                                    <p className="text-[10px] text-gray-400 dark:text-gray-500 uppercase font-bold tracking-wider">Market Value</p>
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4 py-3 border-y border-gray-50 dark:border-gray-700/30">
+                                <div>
+                                    <p className="text-[9px] text-gray-400 dark:text-gray-500 uppercase font-black tracking-widest mb-0.5">Holding Details</p>
+                                    <p className="text-xs font-bold text-gray-800 dark:text-gray-200">
+                                        {stock.totalQuantity} Shares @ {maskValue(stock.averagePrice)}
+                                    </p>
+                                </div>
+                                <div className="text-right">
+                                    <p className="text-[9px] text-gray-400 dark:text-gray-500 uppercase font-black tracking-widest mb-0.5">Unrealized P&L</p>
+                                    <p className={cn("text-xs font-black", isProfit ? "text-green-500" : "text-red-500")}>
+                                        {isProfit ? '+' : ''}{maskValue(stock.unrealizedPL)} ({plPercentage.toFixed(2)}%)
+                                    </p>
+                                </div>
+                                <div>
+                                    <p className="text-[9px] text-gray-400 dark:text-gray-500 uppercase font-black tracking-widest mb-0.5">Price (LTP)</p>
+                                    <div className="flex items-center gap-1.5">
+                                        <span className="text-xs font-bold text-gray-800 dark:text-gray-200">{maskValue(stock.currentPrice)}</span>
+                                        <span className={cn("text-[10px] font-black", isDayUp ? "text-green-500" : "text-red-500")}>
+                                            {isDayUp ? '▲' : '▼'} {Math.abs(stock.dayChangePercent || 0).toFixed(2)}%
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className="text-right">
+                                    <p className="text-[9px] text-gray-400 dark:text-gray-500 uppercase font-black tracking-widest mb-0.5">Status</p>
+                                    <p className="text-[10px] font-bold text-gray-400 dark:text-gray-500">
+                                        {stock.lastUpdatedAt ? dayjs(stock.lastUpdatedAt).fromNow() : '—'}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="flex gap-2 mt-4">
+                                <button
+                                    onClick={() => onAddMore(stock)}
+                                    className="flex-1 py-2 rounded-xl text-xs font-bold bg-blue-600 text-white shadow-sm active:scale-95 transition-all"
+                                >
+                                    Add More
+                                </button>
+                                <button
+                                    onClick={() => onSell(stock)}
+                                    className="flex-1 py-2 rounded-xl text-xs font-bold border border-red-200 dark:border-red-900/50 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 active:scale-95 transition-all"
+                                >
+                                    Sell
+                                </button>
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
         </div>
     );
 };

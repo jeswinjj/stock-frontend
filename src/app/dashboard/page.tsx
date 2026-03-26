@@ -124,8 +124,8 @@ export default function Dashboard() {
     if (loading) return <div className="flex items-center justify-center h-screen font-medium text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-slate-900">Loading your portfolio...</div>;
 
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-slate-900 text-gray-900 dark:text-gray-100 p-6 md:p-12 transition-colors duration-300">
-            <div className="max-w-7xl mx-auto space-y-8">
+        <div className="min-h-screen bg-gray-50 dark:bg-slate-900 text-gray-900 dark:text-gray-100 p-4 md:p-12 transition-colors duration-300">
+            <div className="max-w-7xl mx-auto space-y-6 md:space-y-8">
                 {/* Toast Notification */}
                 {toast && (
                     <div className={cn(
@@ -141,8 +141,8 @@ export default function Dashboard() {
 
                 <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                     <div>
-                        <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight">Portfolio</h1>
-                        <p className="text-gray-500 dark:text-gray-400 font-medium">Monitoring {stocks.length} assets</p>
+                        <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight">Portfolio</h1>
+                        <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400 font-medium">Monitoring {stocks.length} assets</p>
                     </div>
                     <div className="flex flex-wrap items-center gap-3">
                         <div className="mr-2">
@@ -153,32 +153,32 @@ export default function Dashboard() {
                         <Button
                             variant="outline"
                             onClick={togglePrivacy}
-                            className="h-12 w-12 p-0 rounded-xl border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all shadow-sm"
+                            className="h-11 w-11 md:h-12 md:w-12 p-0 rounded-xl border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all shadow-sm"
                             title={hideBalance ? "Show Balances" : "Hide Balances"}
                         >
-                            {hideBalance ? <EyeOff size={20} /> : <Eye size={20} />}
+                            {hideBalance ? <EyeOff size={18} /> : <Eye size={18} />}
                         </Button>
                         <Button
                             variant="outline"
                             onClick={fetchLatestPrices}
                             disabled={isFetching}
-                            className="h-12 px-6 rounded-xl border-blue-200 dark:border-blue-900/50 text-blue-700 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 font-bold transition-all shadow-sm"
+                            className="h-11 md:h-12 px-4 md:px-6 rounded-xl border-blue-200 dark:border-blue-900/50 text-blue-700 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 font-bold transition-all shadow-sm text-xs md:text-base grow md:grow-0"
                         >
-                            <RefreshCw size={20} className={cn("mr-2", isFetching && "animate-spin")} />
+                            <RefreshCw size={18} className={cn("mr-1.5 md:mr-2", isFetching && "animate-spin")} />
                             {isFetching ? 'Refreshing...' : 'Refresh Prices'}
                         </Button>
                         <Button
                             onClick={() => { setSelectedStock(null); setIsBuyModalOpen(true); }}
-                            className="h-12 px-6 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold transition-all shadow-md hover:shadow-lg active:scale-95"
+                            className="h-11 md:h-12 px-4 md:px-6 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold transition-all shadow-md hover:shadow-lg active:scale-95 text-sm md:text-base grow md:grow-0"
                         >
-                            <Plus size={20} className="mr-2" /> Add Stock
+                            <Plus size={18} className="mr-1.5 md:mr-2" /> Add Stock
                         </Button>
                         <Button
                             variant="outline"
                             onClick={logout}
-                            className="h-12 w-12 p-0 rounded-xl border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all shadow-sm"
+                            className="h-11 w-11 md:h-12 md:w-12 p-0 rounded-xl border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all shadow-sm"
                         >
-                            <LogOut size={20} />
+                            <LogOut size={18} />
                         </Button>
                     </div>
                 </header>
@@ -210,9 +210,9 @@ export default function Dashboard() {
                 </section>
 
                 <div className="grid grid-cols-1 gap-8">
-                    <section className="bg-white dark:bg-slate-800 p-8 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm transition-colors duration-300">
-                        <div className="flex justify-between items-center mb-6">
-                            <h2 className="text-xl font-bold text-gray-800 dark:text-white">Portfolio Distribution</h2>
+                    <section className="bg-white dark:bg-slate-800 p-4 md:p-8 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm transition-colors duration-300">
+                        <div className="flex justify-between items-center mb-4 md:mb-6">
+                            <h2 className="text-lg md:text-xl font-bold text-gray-800 dark:text-white">Portfolio Distribution</h2>
                         </div>
                         <PortfolioBarChart
                             invested={summary?.totalInvested || 0}
@@ -226,8 +226,8 @@ export default function Dashboard() {
                     </section>
 
                     <section className="bg-white dark:bg-slate-800 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden transition-colors duration-300">
-                        <div className="p-8 border-b border-gray-50 dark:border-gray-700 bg-gray-50/50 dark:bg-slate-800/50">
-                            <h2 className="text-xl font-bold text-gray-800 dark:text-white">Your Holdings</h2>
+                        <div className="p-4 md:p-8 border-b border-gray-50 dark:border-gray-700 bg-gray-50/50 dark:bg-slate-800/50">
+                            <h2 className="text-lg md:text-xl font-bold text-gray-800 dark:text-white">Your Holdings</h2>
                         </div>
                         <PortfolioTable
                             stocks={stocks}
@@ -244,11 +244,11 @@ export default function Dashboard() {
                         />
                     </section>
 
-                    <section className="bg-white dark:bg-slate-800 p-8 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm transition-colors duration-300">
-                        <div className="flex justify-between items-center mb-6">
+                    <section className="bg-white dark:bg-slate-800 p-4 md:p-8 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm transition-colors duration-300">
+                        <div className="flex justify-between items-center mb-4 md:mb-6">
                             <div>
-                                <h2 className="text-xl font-bold text-gray-800 dark:text-white">Stock-wise Performance</h2>
-                                <p className="text-xs font-medium text-gray-400 dark:text-gray-500 mt-1 uppercase tracking-wider">Invested Capital vs Current Value</p>
+                                <h2 className="text-lg md:text-xl font-bold text-gray-800 dark:text-white">Stock-wise Performance</h2>
+                                <p className="text-[10px] md:text-xs font-medium text-gray-400 dark:text-gray-500 mt-1 uppercase tracking-wider">Invested Capital vs Current Value</p>
                             </div>
                         </div>
                         <StockPerformanceChart data={performance} />

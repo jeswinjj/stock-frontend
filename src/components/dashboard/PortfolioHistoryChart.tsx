@@ -108,7 +108,7 @@ export const PortfolioHistoryChart = () => {
         <div
             className={cn(
                 "bg-white dark:bg-gray-900 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm transition-all duration-300 ease-in-out overflow-hidden",
-                isMinimized ? "p-4 h-auto" : "p-6 md:p-8 h-auto"
+                isMinimized ? "p-3 md:p-4 h-auto" : "p-4 md:p-8 h-auto"
             )}
         >
             <div
@@ -139,7 +139,7 @@ export const PortfolioHistoryChart = () => {
                                         key={item.key}
                                         onClick={() => setMetric(item.key as 'value' | 'derivedPL')}
                                         className={cn(
-                                            "px-3 py-1 text-xs font-bold rounded-lg transition-all",
+                                            "px-2 md:px-3 py-1 text-[10px] md:text-xs font-bold rounded-lg transition-all",
                                             metric === item.key
                                                 ? "bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm"
                                                 : "text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200"
@@ -159,7 +159,7 @@ export const PortfolioHistoryChart = () => {
                                         key={r}
                                         onClick={() => setRange(r)}
                                         className={cn(
-                                            "px-3 py-1.5 text-xs font-bold rounded-lg transition-all duration-200",
+                                            "px-2 md:px-3 py-1 md:py-1.5 text-[10px] md:text-xs font-bold rounded-lg transition-all duration-200",
                                             range === r
                                                 ? "bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm"
                                                 : "text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200"
@@ -182,7 +182,7 @@ export const PortfolioHistoryChart = () => {
             </div>
 
             {!isMinimized && (
-                <div className="mt-8 h-[400px] w-full animate-in fade-in duration-500">
+                <div className="mt-4 md:mt-8 h-[300px] md:h-[400px] w-full animate-in fade-in duration-500">
                     {loading ? (
                         <div className="h-full w-full flex items-center justify-center text-gray-400 dark:text-gray-500 font-medium animate-pulse">
                             Loading history...

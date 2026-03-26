@@ -28,7 +28,7 @@ export const PortfolioBarChart = ({ invested, currentValue }: PortfolioBarChartP
                 <span>Portfolio Composition</span>
                 <span className="text-gray-900 dark:text-white">{maskValue(currentValue)}</span>
             </div>
-            <div className="h-4 w-full bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden flex">
+            <div className="h-[6px] w-full bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden flex">
                 <div
                     className="h-full bg-blue-500 transition-all duration-500"
                     style={{ width: `${investedWidth}%` }}
@@ -49,7 +49,7 @@ export const PortfolioBarChart = ({ invested, currentValue }: PortfolioBarChartP
                     />
                 )}
             </div>
-            <div className="flex gap-4 mt-2">
+            <div className="flex flex-wrap gap-x-4 gap-y-2 mt-2">
                 <div className="flex items-center gap-1.5 text-xs text-gray-600 dark:text-gray-300">
                     <div className="w-3 h-3 bg-blue-500 rounded-sm shadow-sm" />
                     <span>Invested ({maskValue(invested)})</span>

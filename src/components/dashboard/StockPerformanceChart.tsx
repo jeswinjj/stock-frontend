@@ -75,8 +75,8 @@ export const StockPerformanceChart = ({ data }: StockPerformanceChartProps) => {
         return null;
     };
 
-    // Calculate height based on number of stocks to make it scrollable in container
-    const chartHeight = Math.max(400, data.length * 45);
+    // Calculate width based on number of stocks to make it scrollable horizontally in container
+    const chartWidth = Math.max(500, data.length * 60);
 
     return (
         <div className="w-full space-y-4">
@@ -94,33 +94,31 @@ export const StockPerformanceChart = ({ data }: StockPerformanceChartProps) => {
                 </div>
             </div>
 
-            <div className="bg-gray-50/30 dark:bg-slate-900/30 rounded-3xl p-4 md:p-6 border border-gray-100/50 dark:border-gray-700/50">
+            <div className="bg-gray-50/30 dark:bg-slate-900/30 rounded-3xl p-2 md:p-6 border border-gray-100/50 dark:border-gray-700/50">
                 <div
-                    className="overflow-y-auto pr-2 custom-scrollbar"
-                    style={{ maxHeight: '600px' }}
+                    className="overflow-x-auto pb-4 custom-scrollbar"
                 >
-                    <div style={{ height: `${chartHeight}px`, width: '100%', minWidth: '400px' }}>
+                    <div style={{ height: '400px', width: `${chartWidth}px` }}>
                         <ResponsiveContainer width="100%" height="100%">
                             <BarChart
                                 data={chartData}
-                                layout="vertical"
-                                margin={{ top: 5, right: 30, left: 40, bottom: 5 }}
+                                layout="horizontal"
+                                margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
                                 barGap={0}
                             >
-                                <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#334155" opacity={0.3} />
+                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#334155" opacity={0.3} />
                                 <XAxis
-                                    type="number"
-                                    hide={hideBalance}
-                                    tickFormatter={(val) => hideBalance ? "XXXXX" : `₹${val / 1000}k`}
-                                    tick={{ fontSize: 10, fill: '#94A3B8', fontWeight: 600 }}
+                                    dataKey="displayName"
+                                    type="category"
+                                    tick={{ fontSize: 11, fill: '#94A3B8', fontWeight: 700 }}
                                     axisLine={false}
                                     tickLine={false}
                                 />
                                 <YAxis
-                                    dataKey="displayName"
-                                    type="category"
-                                    tick={{ fontSize: 11, fill: '#94A3B8', fontWeight: 700 }}
-                                    width={60}
+                                    type="number"
+                                    hide={hideBalance}
+                                    tickFormatter={(val) => hideBalance ? "XXXXX" : `₹${val / 1000}k`}
+                                    tick={{ fontSize: 10, fill: '#94A3B8', fontWeight: 600 }}
                                     axisLine={false}
                                     tickLine={false}
                                 />
@@ -129,9 +127,9 @@ export const StockPerformanceChart = ({ data }: StockPerformanceChartProps) => {
                                     cursor={{ fill: 'var(--tooltip-cursor, #F1F5F9)', opacity: 0.1 }}
                                 />
 
-                                <Bar dataKey="base" stackId="a" fill="#3B82F6" radius={[0, 0, 0, 0]} barSize={24} />
-                                <Bar dataKey="profitSegment" stackId="a" fill="#10B981" radius={[0, 6, 6, 0]} />
-                                <Bar dataKey="lossSegment" stackId="a" fill="#EF4444" radius={[0, 6, 6, 0]} />
+                                <Bar dataKey="base" stackId="a" fill="#3B82F6" radius={[0, 0, 0, 0]} barSize={30} />
+                                <Bar dataKey="profitSegment" stackId="a" fill="#10B981" radius={[6, 6, 0, 0]} />
+                                <Bar dataKey="lossSegment" stackId="a" fill="#EF4444" radius={[6, 6, 0, 0]} />
                             </BarChart>
                         </ResponsiveContainer>
                     </div>

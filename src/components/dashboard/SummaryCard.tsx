@@ -12,7 +12,7 @@ export const SummaryCard = ({ title, value, subValue, isProfit }: SummaryCardPro
     const { hideBalance } = useAuth();
 
     return (
-        <div className="bg-white dark:bg-slate-800 px-4 py-6 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm transition-all hover:shadow-md duration-300">
+        <div className="bg-white dark:bg-slate-800 p-4 md:px-4 md:py-6 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm transition-all hover:shadow-md duration-300">
             <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{title}</p>
             <div className="mt-2 flex flex-col items-baseline gap-2">
                 <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
