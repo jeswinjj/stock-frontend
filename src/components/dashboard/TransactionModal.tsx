@@ -4,6 +4,8 @@ import { Button, Input } from '../ui/BaseComponents';
 import { X } from 'lucide-react';
 import api from '@/services/api';
 import { cn } from '@/lib/utils';
+import { StockAutocomplete } from './StockAutocomplete';
+
 
 interface TransactionModalProps {
     isOpen: boolean;
@@ -17,11 +19,13 @@ export const TransactionModal = ({ isOpen, onClose, onSubmit, initialData, isLoa
     const [balance, setBalance] = useState<number>(0);
     const [formData, setFormData] = useState({
         symbol: '',
+        name: '',
         price: '',
         quantity: '',
         type: 'BUY',
         date: new Date().toISOString().split('T')[0]
     });
+
 
     useEffect(() => {
         if (isOpen) {
@@ -33,6 +37,7 @@ export const TransactionModal = ({ isOpen, onClose, onSubmit, initialData, isLoa
             // Reset form data when opening
             setFormData({
                 symbol: initialData?.symbol || '',
+                name: initialData?.name || '',
                 price: '',
                 quantity: '',
                 type: 'BUY',
@@ -67,14 +72,17 @@ export const TransactionModal = ({ isOpen, onClose, onSubmit, initialData, isLoa
                     {!initialData && (
                         <div>
                             <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 block">Stock Symbol (NSE)</label>
-                            <Input
+                            <StockAutocomplete
                                 value={formData.symbol}
-                                onChange={(e) => setFormData({ ...formData, symbol: e.target.value.toUpperCase() })}
-                                placeholder="e.g. RELIANCE"
+                                onChange={(symbol, name) => {
+                                    setFormData({ ...formData, symbol, name: name || formData.name } as any);
+                                }}
+                                placeholder="Search by symbol or name..."
                                 disabled={isLoading}
-                                className="bg-gray-50 dark:bg-slate-900 border-gray-200 dark:border-gray-700 focus:bg-white dark:focus:bg-slate-900 dark:text-white transition-all uppercase"
+                                className="w-full"
                             />
                         </div>
+
                     )}
 
                     <div className="grid grid-cols-2 gap-4">
