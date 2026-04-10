@@ -81,7 +81,7 @@ export const PortfolioTable = ({ stocks, onSell, onAddMore, onSort, sortConfig }
                 </thead>
                 <tbody className="divide-y divide-gray-50 dark:divide-gray-800 bg-white dark:bg-slate-800 transition-colors duration-300">
                     {stocks.map((stock: any) => {
-                        const plPercentage = ((stock.currentPrice - stock.averagePrice) / stock.averagePrice) * 100;
+                        const plPercentage = stock.pnlPercentage ?? (((stock.currentPrice - stock.averagePrice) / stock.averagePrice) * 100);
                         const isProfit = stock.unrealizedPL >= 0;
                         const isDayUp = (stock.dayChange || 0) >= 0;
 

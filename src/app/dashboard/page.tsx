@@ -162,7 +162,7 @@ export default function Dashboard() {
                             variant="outline"
                             onClick={toggleAutoRefresh}
                             className={cn(
-                                "h-11 md:h-12 px-3 md:px-4 rounded-xl border-gray-200 dark:border-gray-700 transition-all shadow-sm hidden lg:flex items-center gap-2",
+                                "h-11 md:h-12 px-3 md:px-4 rounded-xl border-gray-200 dark:border-gray-700 transition-all shadow-sm flex items-center gap-2",
                                 autoRefreshEnabled ? "text-green-600 dark:text-green-400 border-green-100 dark:border-green-900/30 bg-green-50/50 dark:bg-green-900/10" : "text-gray-400 dark:text-gray-500"
                             )}
                             title={autoRefreshEnabled ? "Auto-Refresh is ON (4 PM Weekdays)" : "Auto-Refresh is OFF"}
