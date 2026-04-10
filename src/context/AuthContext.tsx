@@ -12,6 +12,8 @@ interface AuthContextType {
     togglePrivacy: () => Promise<void>;
     loading: boolean;
     hideBalance: boolean;
+    autoRefreshEnabled: boolean;
+    toggleAutoRefresh: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -21,6 +23,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [token, setToken] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
     const [hideBalance, setHideBalance] = useState(false);
+    const [autoRefreshEnabled, setAutoRefreshEnabled] = useState(false);
     const router = useRouter();
 
     useEffect(() => {
@@ -32,8 +35,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setToken(savedToken);
             const parsedUser = JSON.parse(savedUser);
             setUser(parsedUser);
-            // Balance state priority: LocalStorage (instant) -> DB User Profile (persistent)
+            // Balance & Auto-refresh state priority: LocalStorage (instant) -> DB User Profile (persistent)
             setHideBalance(localPrivacy || !!parsedUser.hideBalance);
+            setAutoRefreshEnabled(localStorage.getItem('autoRefreshEnabled') === 'true' || !!parsedUser.autoRefreshEnabled);
         }
         setLoading(false);
     }, []);
@@ -44,9 +48,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         localStorage.setItem('token', token);
         localStorage.setItem('user', JSON.stringify(user));
         localStorage.setItem('hideBalance', String(!!user.hideBalance));
+        localStorage.setItem('autoRefreshEnabled', String(!!user.autoRefreshEnabled));
         setToken(token);
         setUser(user);
         setHideBalance(!!user.hideBalance);
+        setAutoRefreshEnabled(!!user.autoRefreshEnabled);
         router.push('/dashboard');
     };
 
@@ -74,6 +80,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
     };
 
+    const toggleAutoRefresh = async () => {
+        const newState = !autoRefreshEnabled;
+        setAutoRefreshEnabled(newState);
+        localStorage.setItem('autoRefreshEnabled', String(newState));
+
+        try {
+            await api.post('/user/toggle-auto-refresh', { autoRefreshEnabled: newState });
+        } catch (err: any) {
+            console.error('Failed to sync auto-refresh setting with server:', err.response?.data?.message || err.message);
+        }
+    };
+
     const logout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
@@ -85,7 +103,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     return (
-        <AuthContext.Provider value={{ user, token, login, register, logout, togglePrivacy, loading, hideBalance }}>
+        <AuthContext.Provider value={{ user, token, login, register, logout, togglePrivacy, loading, hideBalance, autoRefreshEnabled, toggleAutoRefresh }}>
             {children}
         </AuthContext.Provider>
     );

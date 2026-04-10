@@ -11,12 +11,12 @@ import { TransactionModal } from '@/components/dashboard/TransactionModal';
 import { SellModal } from '@/components/dashboard/SellModal';
 import { Button } from '@/components/ui/BaseComponents';
 import { ThemeToggle } from '@/components/ThemeToggle';
-import { LogOut, Plus, RefreshCw, AlertCircle, CheckCircle2, Eye, EyeOff } from 'lucide-react';
+import { LogOut, Plus, RefreshCw, AlertCircle, CheckCircle2, Eye, EyeOff, Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { WalletCard } from '@/components/dashboard/WalletCard';
 
 export default function Dashboard() {
-    const { user, logout, hideBalance, togglePrivacy, loading: authLoading } = useAuth();
+    const { user, logout, hideBalance, togglePrivacy, loading: authLoading, autoRefreshEnabled, toggleAutoRefresh } = useAuth();
     const [summary, setSummary] = useState<any>(null);
     const [stocks, setStocks] = useState<any[]>([]);
     const [performance, setPerformance] = useState<any[]>([]);
@@ -157,6 +157,18 @@ export default function Dashboard() {
                             title={hideBalance ? "Show Balances" : "Hide Balances"}
                         >
                             {hideBalance ? <EyeOff size={18} /> : <Eye size={18} />}
+                        </Button>
+                        <Button
+                            variant="outline"
+                            onClick={toggleAutoRefresh}
+                            className={cn(
+                                "h-11 md:h-12 px-3 md:px-4 rounded-xl border-gray-200 dark:border-gray-700 transition-all shadow-sm hidden lg:flex items-center gap-2",
+                                autoRefreshEnabled ? "text-green-600 dark:text-green-400 border-green-100 dark:border-green-900/30 bg-green-50/50 dark:bg-green-900/10" : "text-gray-400 dark:text-gray-500"
+                            )}
+                            title={autoRefreshEnabled ? "Auto-Refresh is ON (4 PM Weekdays)" : "Auto-Refresh is OFF"}
+                        >
+                            <Clock size={16} className={cn(autoRefreshEnabled && "animate-pulse")} />
+                            <span className="text-[10px] md:text-xs font-bold whitespace-nowrap">{autoRefreshEnabled ? 'Auto ON' : 'Auto OFF'}</span>
                         </Button>
                         <Button
                             variant="outline"
