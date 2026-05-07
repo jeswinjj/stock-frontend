@@ -20,17 +20,20 @@ interface Stock {
     lastUpdatedAt?: string;
     dayChange?: number;
     dayChangePercent?: number;
+    isCorporateActionAdjusted?: boolean;
+    corporateActionHistory?: { actionType: string; actionDate: string; description: string; }[];
 }
 
 interface PortfolioTableProps {
     stocks: Stock[];
     onSell: (stock: Stock) => void;
     onAddMore: (stock: Stock) => void;
+    onView: (stock: Stock) => void;
     onSort: (column: string) => void;
     sortConfig: { column: string; order: 'asc' | 'desc' };
 }
 
-export const PortfolioTable = ({ stocks, onSell, onAddMore, onSort, sortConfig }: PortfolioTableProps) => {
+export const PortfolioTable = ({ stocks, onSell, onAddMore, onView, onSort, sortConfig }: PortfolioTableProps) => {
     const { hideBalance } = useAuth();
 
     const renderSortArrow = (column: string) => {
@@ -88,7 +91,17 @@ export const PortfolioTable = ({ stocks, onSell, onAddMore, onSort, sortConfig }
                         return (
                             <tr key={stock.symbol} className={getRowClass(stock)}>
                                 <td className="px-6 py-4">
-                                    <span className="font-bold text-gray-900 dark:text-white block text-base">{stock.symbol}</span>
+                                    <div className="flex items-center gap-2">
+                                        <span className="font-bold text-gray-900 dark:text-white block text-base">{stock.symbol}</span>
+                                        {stock.isCorporateActionAdjusted && (
+                                            <span 
+                                                className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400 cursor-help"
+                                                title={stock.corporateActionHistory?.map((h: any) => `${h.actionType} (${dayjs(h.actionDate).format('DD MMM YYYY')}): ${h.description}`).join('\n')}
+                                            >
+                                                CA
+                                            </span>
+                                        )}
+                                    </div>
                                     <span className="text-xs text-gray-500 dark:text-gray-400">{stock.name}</span>
                                 </td>
                                 <td className="px-6 py-4 font-medium text-gray-700 dark:text-gray-300">{stock.totalQuantity}</td>
@@ -120,6 +133,12 @@ export const PortfolioTable = ({ stocks, onSell, onAddMore, onSort, sortConfig }
                                 </td>
                                 <td className="px-6 py-4 text-right space-x-2 whitespace-nowrap">
                                     <button
+                                        onClick={() => onView(stock)}
+                                        className="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all border border-gray-200 dark:border-gray-700"
+                                    >
+                                        View
+                                    </button>
+                                    <button
                                         onClick={() => onAddMore(stock)}
                                         className="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-all border border-blue-100 dark:border-blue-800/50"
                                     >
@@ -149,7 +168,17 @@ export const PortfolioTable = ({ stocks, onSell, onAddMore, onSort, sortConfig }
                         <div key={stock.symbol} className="p-4 bg-white dark:bg-slate-800 transition-colors">
                             <div className="flex justify-between items-start mb-3">
                                 <div>
-                                    <h3 className="text-base font-black text-gray-900 dark:text-white leading-tight">{stock.symbol}</h3>
+                                    <div className="flex items-center gap-2">
+                                        <h3 className="text-base font-black text-gray-900 dark:text-white leading-tight">{stock.symbol}</h3>
+                                        {stock.isCorporateActionAdjusted && (
+                                            <span 
+                                                className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400 cursor-help"
+                                                title={stock.corporateActionHistory?.map((h: any) => `${h.actionType} (${dayjs(h.actionDate).format('DD MMM YYYY')}): ${h.description}`).join('\n')}
+                                            >
+                                                CA
+                                            </span>
+                                        )}
+                                    </div>
                                     <p className="text-[10px] text-gray-500 dark:text-gray-400 font-medium truncate max-w-[150px]">{stock.name}</p>
                                 </div>
                                 <div className="text-right">
@@ -190,10 +219,16 @@ export const PortfolioTable = ({ stocks, onSell, onAddMore, onSort, sortConfig }
 
                             <div className="flex gap-2 mt-4">
                                 <button
+                                    onClick={() => onView(stock)}
+                                    className="flex-1 py-2 rounded-xl text-xs font-bold border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 active:scale-95 transition-all"
+                                >
+                                    View
+                                </button>
+                                <button
                                     onClick={() => onAddMore(stock)}
                                     className="flex-1 py-2 rounded-xl text-xs font-bold bg-blue-600 text-white shadow-sm active:scale-95 transition-all"
                                 >
-                                    Add More
+                                    Buy
                                 </button>
                                 <button
                                     onClick={() => onSell(stock)}

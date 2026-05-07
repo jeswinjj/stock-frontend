@@ -9,11 +9,13 @@ import { StockPerformanceChart } from '@/components/dashboard/StockPerformanceCh
 import { PortfolioHistoryChart } from '@/components/dashboard/PortfolioHistoryChart';
 import { TransactionModal } from '@/components/dashboard/TransactionModal';
 import { SellModal } from '@/components/dashboard/SellModal';
+import { StockDetailsModal } from '../../components/dashboard/StockDetailsModal';
 import { Button } from '@/components/ui/BaseComponents';
 import { ThemeToggle } from '@/components/ThemeToggle';
-import { LogOut, Plus, RefreshCw, AlertCircle, CheckCircle2, Eye, EyeOff, Clock } from 'lucide-react';
+import { LogOut, Plus, RefreshCw, AlertCircle, CheckCircle2, Eye, EyeOff, Clock, Briefcase, Shield } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { WalletCard } from '@/components/dashboard/WalletCard';
+import Link from 'next/link';
 
 export default function Dashboard() {
     const { user, logout, hideBalance, togglePrivacy, loading: authLoading, autoRefreshEnabled, toggleAutoRefresh } = useAuth();
@@ -22,6 +24,7 @@ export default function Dashboard() {
     const [performance, setPerformance] = useState<any[]>([]);
     const [isBuyModalOpen, setIsBuyModalOpen] = useState(false);
     const [isSellModalOpen, setIsSellModalOpen] = useState(false);
+    const [isViewModalOpen, setIsViewModalOpen] = useState(false);
     const [selectedStock, setSelectedStock] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [isFetching, setIsFetching] = useState(false);
@@ -179,6 +182,17 @@ export default function Dashboard() {
                             <RefreshCw size={18} className={cn("mr-1.5 md:mr-2", isFetching && "animate-spin")} />
                             {isFetching ? 'Refreshing...' : 'Refresh Prices'}
                         </Button>
+                        {user?.role === 'admin' && (
+                            <Link href="/admin/dashboard">
+                                <Button
+                                    variant="outline"
+                                    className="h-11 md:h-12 px-4 md:px-6 rounded-xl border-purple-200 dark:border-purple-900/50 text-purple-700 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20 font-bold transition-all shadow-sm text-xs md:text-base grow md:grow-0"
+                                >
+                                    <Shield size={18} className="mr-1.5 md:mr-2" />
+                                    Admin
+                                </Button>
+                            </Link>
+                        )}
                         <Button
                             onClick={() => { setSelectedStock(null); setIsBuyModalOpen(true); }}
                             className="h-11 md:h-12 px-4 md:px-6 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold transition-all shadow-md hover:shadow-lg active:scale-95 text-sm md:text-base grow md:grow-0"
@@ -251,6 +265,10 @@ export default function Dashboard() {
                                 setSelectedStock(stock);
                                 setIsSellModalOpen(true);
                             }}
+                            onView={(stock) => {
+                                setSelectedStock(stock);
+                                setIsViewModalOpen(true);
+                            }}
                             onSort={handleSort}
                             sortConfig={sortConfig}
                         />
@@ -282,6 +300,13 @@ export default function Dashboard() {
                 onSubmit={handleSellSubmit}
                 stock={selectedStock}
                 isLoading={isSubmitting}
+            />
+
+            <StockDetailsModal
+                isOpen={isViewModalOpen}
+                onClose={() => { setIsViewModalOpen(false); setSelectedStock(null); }}
+                stock={selectedStock}
+                onRefresh={fetchData}
             />
         </div>
     );

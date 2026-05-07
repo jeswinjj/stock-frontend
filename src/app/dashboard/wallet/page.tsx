@@ -13,7 +13,7 @@ import * as XLSX from 'xlsx';
 
 interface Transaction {
     id: number;
-    type: 'CREDIT' | 'DEBIT' | 'BUY' | 'SELL' | 'SELL_PROFIT' | 'SELL_LOSS' | 'WITHDRAW';
+    type: 'CREDIT' | 'DEBIT' | 'BUY' | 'SELL' | 'SELL_PROFIT' | 'SELL_LOSS' | 'WITHDRAW' | 'CORPORATE_ACTION';
     amount: string;
     description: string;
     symbol?: string;
@@ -108,9 +108,9 @@ export default function WalletPage() {
                 displayBuyPrice = Number((extractedSellPrice - (extractedPL / tx.quantity)).toFixed(2));
             }
 
-            // 5. Corrected Net Value (Cash Flow Impact)
             let netValue = amount;
             if (['WITHDRAW', 'DEBIT', 'BUY'].includes(tx.type)) netValue = -amount;
+            if (tx.type === 'CORPORATE_ACTION') netValue = 0;
 
             // 6. Data Validation Layer
             if (isSell && tx.type === 'SELL_LOSS' && extractedPL !== null && extractedPL > 0) {
@@ -139,6 +139,7 @@ export default function WalletPage() {
             if (activeTab === 'wallet') {
                 return ['CREDIT', 'WITHDRAW', 'DEBIT'].includes(tx.type);
             } else {
+                if (tx.type === 'CORPORATE_ACTION') return true;
                 if (!tx.type.startsWith('BUY') && !tx.type.startsWith('SELL')) return false;
                 if (tradeFilter === 'buy') return tx.type === 'BUY';
                 if (tradeFilter === 'sell') return tx.normalizedType === 'SELL';
@@ -197,6 +198,8 @@ export default function WalletPage() {
                 return 'text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20';
             case 'BUY':
                 return 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20';
+            case 'CORPORATE_ACTION':
+                return 'text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/20';
             default:
                 return 'text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-800';
         }
@@ -214,6 +217,8 @@ export default function WalletPage() {
             case 'DEBIT':
             case 'BUY':
                 return <ArrowUpRight size={18} />;
+            case 'CORPORATE_ACTION':
+                return <History size={18} />;
             default:
                 return <History size={18} />;
         }
