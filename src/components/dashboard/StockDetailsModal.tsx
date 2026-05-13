@@ -144,17 +144,24 @@ export function StockDetailsModal({ isOpen, onClose, stock, onRefresh }: StockDe
                                     <p className="text-sm font-medium text-gray-400 dark:text-gray-500">No target prices set yet.</p>
                                 </div>
                             ) : (
-                                localTargets.map((t) => {
-                                    // Target Return Calculated from Avg Price
-                                    const expReturn = avgPrice > 0 ? ((t.price - avgPrice) / avgPrice) * 100 : 0;
-                                    const expProfitParams = t.price - avgPrice;
-                                    const isPositive = expProfitParams >= 0;
+                                [...localTargets]
+                                    .sort((a, b) => a.price - b.price) // Sort ascending to determine Target 1, 2, 3
+                                    .map((t, index) => ({ ...t, labelIndex: index + 1 })) // Attach correct label
+                                    .reverse() // Display descending (Target 3 first)
+                                    .map((t) => {
+                                        // Target Return Calculated from Avg Price
+                                        const expReturn = avgPrice > 0 ? ((t.price - avgPrice) / avgPrice) * 100 : 0;
+                                        const expProfitParams = t.price - avgPrice;
+                                        const isPositive = expProfitParams >= 0;
 
-                                    return (
-                                        <div key={t._id} className="group relative flex flex-col p-4 bg-white dark:bg-slate-800 border border-gray-100 dark:border-gray-700 rounded-2xl shadow-sm hover:border-blue-200 dark:hover:border-blue-800 transition-colors">
-                                            <div className="flex justify-between items-center mb-2">
-                                                <div className="flex items-center gap-2">
-                                                    <span className="text-lg font-black text-gray-800 dark:text-white">{formatCurrency(t.price)}</span>
+                                        return (
+                                            <div key={t._id} className="group relative flex flex-col p-4 bg-white dark:bg-slate-800 border border-gray-100 dark:border-gray-700 rounded-2xl shadow-sm hover:border-blue-200 dark:hover:border-blue-800 transition-colors">
+                                                <div className="flex justify-between items-center mb-2">
+                                                    <div className="flex items-center gap-2">
+                                                        <div className="flex flex-col">
+                                                            <span className="text-[10px] font-black text-blue-500 uppercase tracking-wider mb-0.5">Target {t.labelIndex}</span>
+                                                            <span className="text-lg font-black text-gray-800 dark:text-white">{formatCurrency(t.price)}</span>
+                                                        </div>
                                                     {t.price <= currentPrice && (
                                                         <span className="text-[10px] bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-2 py-0.5 rounded-full font-bold">
                                                             Reached

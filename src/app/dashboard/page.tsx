@@ -15,6 +15,7 @@ import { ThemeToggle } from '@/components/ThemeToggle';
 import { LogOut, Plus, RefreshCw, AlertCircle, CheckCircle2, Eye, EyeOff, Clock, Briefcase, Shield } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { WalletCard } from '@/components/dashboard/WalletCard';
+import { StockNotification } from '@/components/dashboard/StockNotification';
 import Link from 'next/link';
 
 export default function Dashboard() {
@@ -152,6 +153,7 @@ export default function Dashboard() {
                             <WalletCard />
                         </div>
                         {/* <ThemeToggle /> */}
+                        <StockNotification stocks={stocks} />
 
                         <Button
                             variant="outline"
