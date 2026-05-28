@@ -28,7 +28,7 @@ interface HistoryData {
 export const PortfolioHistoryChart = () => {
     const [data, setData] = useState<HistoryData[]>([]);
     const [range, setRange] = useState<'1D' | '1M' | '3M' | '1Y' | 'ALL'>('1M');
-    const [metric, setMetric] = useState<'value' | 'derivedPL'>('value');
+    const [metric, setMetric] = useState<'value' | 'derivedPL'>('derivedPL');
     const [loading, setLoading] = useState(true);
     const [isMinimized, setIsMinimized] = useState(true);
 
@@ -118,9 +118,23 @@ export const PortfolioHistoryChart = () => {
                 <div>
                     <h2 className="text-xl font-bold text-gray-800 dark:text-white">Portfolio Performance</h2>
                     {!isMinimized && (
-                        <p className="text-xs font-medium text-gray-400 dark:text-gray-500 mt-1 uppercase tracking-wider animate-in fade-in duration-300">
-                            Historical Value & Growth
-                        </p>
+                        <div className="flex flex-col gap-1.5 mt-1">
+                            <p className="text-xs font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wider animate-in fade-in duration-300">
+                                Historical Value & Growth
+                            </p>
+                            {metric === 'value' && (
+                                <div className="flex items-center gap-4 text-[10px] md:text-xs font-bold animate-in fade-in duration-300">
+                                    <div className="flex items-center gap-1.5">
+                                        <span className="w-3 h-0 border-t-2 border-dashed border-gray-400 dark:border-gray-500"></span>
+                                        <span className="text-gray-500 dark:text-gray-400">Invested Value</span>
+                                    </div>
+                                    <div className="flex items-center gap-1.5">
+                                        <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: chartColor }}></span>
+                                        <span className="text-gray-500 dark:text-gray-400">Current Value</span>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
                     )}
                 </div>
 
@@ -132,8 +146,8 @@ export const PortfolioHistoryChart = () => {
                                 onClick={(e) => e.stopPropagation()}
                             >
                                 {[
-                                    { key: "value", label: "Portfolio" },
-                                    { key: "derivedPL", label: "Holdings P&L" }
+                                    { key: "derivedPL", label: "Holdings P&L" },
+                                    { key: "value", label: "Portfolio" }
                                 ].map((item) => (
                                     <button
                                         key={item.key}
@@ -189,7 +203,7 @@ export const PortfolioHistoryChart = () => {
                         </div>
                     ) : data.length > 0 ? (
                         <ResponsiveContainer width="100%" height="100%">
-                            <AreaChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                            <ComposedChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                                 <defs>
                                     <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
                                         <stop offset="5%" stopColor={chartColor} stopOpacity={0.4} />
@@ -222,15 +236,37 @@ export const PortfolioHistoryChart = () => {
                                     domain={['auto', 'auto']}
                                 />
                                 <Tooltip content={<CustomTooltip />} cursor={{ stroke: chartColor, strokeWidth: 2, strokeDasharray: '5 5' }} />
-                                <Area
-                                    type="monotone"
-                                    dataKey={metric === 'value' ? 'currentValue' : 'derivedPL'}
-                                    stroke={chartColor}
-                                    strokeWidth={3}
-                                    fillOpacity={1}
-                                    fill="url(#colorValue)"
-                                />
-                            </AreaChart>
+                                {metric === 'value' ? (
+                                    <>
+                                        <Area
+                                            type="monotone"
+                                            dataKey="currentValue"
+                                            stroke={chartColor}
+                                            strokeWidth={3}
+                                            fillOpacity={1}
+                                            fill="url(#colorValue)"
+                                        />
+                                        <Line
+                                            type="monotone"
+                                            dataKey="totalInvested"
+                                            stroke="#94A3B8"
+                                            strokeWidth={2.5}
+                                            strokeDasharray="4 4"
+                                            dot={false}
+                                            activeDot={{ r: 6 }}
+                                        />
+                                    </>
+                                ) : (
+                                    <Area
+                                        type="monotone"
+                                        dataKey="derivedPL"
+                                        stroke={chartColor}
+                                        strokeWidth={3}
+                                        fillOpacity={1}
+                                        fill="url(#colorValue)"
+                                    />
+                                )}
+                            </ComposedChart>
                         </ResponsiveContainer>
                     ) : (
                         <div className="h-full w-full flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 font-medium">
