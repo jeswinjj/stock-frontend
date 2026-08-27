@@ -2,8 +2,9 @@
 import { formatCurrency, formatPercentage, cn } from "@/lib/utils";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { ChevronUp, ChevronDown } from "lucide-react";
+import { ChevronUp, ChevronDown, ExternalLink } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import Link from "next/link";
 
 dayjs.extend(relativeTime);
 
@@ -92,9 +93,15 @@ export const PortfolioTable = ({ stocks, onSell, onAddMore, onView, onSort, sort
                             <tr key={stock.symbol} className={getRowClass(stock)}>
                                 <td className="px-6 py-4">
                                     <div className="flex items-center gap-2">
-                                        <span className="font-bold text-gray-900 dark:text-white block text-base">{stock.symbol}</span>
+                                        <Link
+                                            href={`/dashboard/stocks/${stock.symbol}`}
+                                            className="font-bold text-gray-900 dark:text-white text-base hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center gap-1 group-hover:underline"
+                                        >
+                                            <span>{stock.symbol}</span>
+                                            <ExternalLink size={13} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+                                        </Link>
                                         {stock.isCorporateActionAdjusted && (
-                                            <span 
+                                            <span
                                                 className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400 cursor-help"
                                                 title={stock.corporateActionHistory?.map((h: any) => `${h.actionType} (${dayjs(h.actionDate).format('DD MMM YYYY')}): ${h.description}`).join('\n')}
                                             >
@@ -104,6 +111,7 @@ export const PortfolioTable = ({ stocks, onSell, onAddMore, onView, onSort, sort
                                     </div>
                                     <span className="text-xs text-gray-500 dark:text-gray-400">{stock.name}</span>
                                 </td>
+
                                 <td className="px-6 py-4 font-medium text-gray-700 dark:text-gray-300">{stock.totalQuantity}</td>
                                 <td className="px-6 py-4 font-medium text-gray-700 dark:text-gray-300">{maskValue(stock.averagePrice)}</td>
                                 <td className="px-6 py-4">
@@ -136,7 +144,7 @@ export const PortfolioTable = ({ stocks, onSell, onAddMore, onView, onSort, sort
                                         onClick={() => onView(stock)}
                                         className="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all border border-gray-200 dark:border-gray-700"
                                     >
-                                        View
+                                        Target
                                     </button>
                                     <button
                                         onClick={() => onAddMore(stock)}
@@ -171,7 +179,7 @@ export const PortfolioTable = ({ stocks, onSell, onAddMore, onView, onSort, sort
                                     <div className="flex items-center gap-2">
                                         <h3 className="text-base font-black text-gray-900 dark:text-white leading-tight">{stock.symbol}</h3>
                                         {stock.isCorporateActionAdjusted && (
-                                            <span 
+                                            <span
                                                 className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400 cursor-help"
                                                 title={stock.corporateActionHistory?.map((h: any) => `${h.actionType} (${dayjs(h.actionDate).format('DD MMM YYYY')}): ${h.description}`).join('\n')}
                                             >
@@ -222,7 +230,7 @@ export const PortfolioTable = ({ stocks, onSell, onAddMore, onView, onSort, sort
                                     onClick={() => onView(stock)}
                                     className="flex-1 py-2 rounded-xl text-xs font-bold border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 active:scale-95 transition-all"
                                 >
-                                    View
+                                    Target
                                 </button>
                                 <button
                                     onClick={() => onAddMore(stock)}
