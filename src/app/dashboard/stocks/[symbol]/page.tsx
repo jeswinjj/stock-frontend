@@ -6,6 +6,8 @@ import { StockHeader } from '@/components/stock/StockHeader';
 import { StockPositionCard } from '@/components/stock/StockPositionCard';
 import { StockChart } from '@/components/stock/StockChart';
 import { TechnicalAnalysis } from '@/components/stock/TechnicalAnalysis';
+import { FundamentalAnalysis } from '@/components/stock/FundamentalAnalysis';
+import { StockAnalysis } from '@/components/stock/StockAnalysis';
 import { TransactionModal } from '@/components/dashboard/TransactionModal';
 import { SellModal } from '@/components/dashboard/SellModal';
 import { StockDetailsModal } from '@/components/dashboard/StockDetailsModal';
@@ -120,7 +122,7 @@ export default function StockDetailPage({ params }: { params: Promise<{ symbol: 
                     </Link>
                 </div>
 
-                {/* Stock Header */}
+                {/* 1. Stock Header */}
                 <StockHeader
                     symbol={symbol}
                     name={detail?.name || symbol}
@@ -129,7 +131,7 @@ export default function StockDetailPage({ params }: { params: Promise<{ symbol: 
                     loading={loading}
                 />
 
-                {/* Portfolio Position Card */}
+                {/* 2. Portfolio Position Card */}
                 <StockPositionCard
                     symbol={symbol}
                     name={detail?.name || symbol}
@@ -140,18 +142,25 @@ export default function StockDetailPage({ params }: { params: Promise<{ symbol: 
                     onAddTarget={() => setIsTargetModalOpen(true)}
                 />
 
-                {/* Main Content Grid: Chart + Technical Analysis */}
-                <div className="grid grid-cols-1 gap-8">
-                    {/* Stock Chart Section */}
-                    <section>
-                        <StockChart symbol={symbol} />
-                    </section>
+                {/* 3. Stock Chart Section */}
+                <section>
+                    <StockChart symbol={symbol} />
+                </section>
 
-                    {/* Technical Analysis Section */}
-                    <section>
-                        <TechnicalAnalysis symbol={symbol} />
-                    </section>
-                </div>
+                {/* 4. Technical Analysis Section */}
+                <section>
+                    <TechnicalAnalysis symbol={symbol} />
+                </section>
+
+                {/* 5. Fundamental Analysis Section */}
+                <section>
+                    <FundamentalAnalysis symbol={symbol} />
+                </section>
+
+                {/* 6. Our Analysis Section (Rules-based signals & score) */}
+                <section>
+                    <StockAnalysis symbol={symbol} />
+                </section>
             </div>
 
             {/* Modals for Buy / Sell / Target */}
