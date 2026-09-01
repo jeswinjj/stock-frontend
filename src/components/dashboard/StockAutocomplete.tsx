@@ -14,12 +14,13 @@ interface Stock {
 interface StockAutocompleteProps {
     value: string;
     onChange: (symbol: string, name?: string) => void;
+    onSelect?: (symbol: string, name?: string) => void;
     placeholder?: string;
     disabled?: boolean;
     className?: string;
 }
 
-export const StockAutocomplete = ({ value, onChange, placeholder, disabled, className }: StockAutocompleteProps) => {
+export const StockAutocomplete = ({ value, onChange, onSelect, placeholder, disabled, className }: StockAutocompleteProps) => {
     const [query, setQuery] = useState(value);
     const [suggestions, setSuggestions] = useState<Stock[]>([]);
     const [isOpen, setIsOpen] = useState(false);
@@ -66,6 +67,7 @@ export const StockAutocomplete = ({ value, onChange, placeholder, disabled, clas
     const handleSelect = (stock: Stock) => {
         setQuery(stock.symbol);
         onChange(stock.symbol, stock.name);
+        onSelect?.(stock.symbol, stock.name);
         setIsOpen(false);
     };
 

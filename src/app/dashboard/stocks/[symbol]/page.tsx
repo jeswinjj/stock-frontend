@@ -8,6 +8,7 @@ import { StockChart } from '@/components/stock/StockChart';
 import { TechnicalAnalysis } from '@/components/stock/TechnicalAnalysis';
 import { FundamentalAnalysis } from '@/components/stock/FundamentalAnalysis';
 import { StockAnalysis } from '@/components/stock/StockAnalysis';
+import { PredictionMarketSetup } from '@/components/stock/PredictionMarketSetup';
 import { TransactionModal } from '@/components/dashboard/TransactionModal';
 import { SellModal } from '@/components/dashboard/SellModal';
 import { StockDetailsModal } from '@/components/dashboard/StockDetailsModal';
@@ -160,6 +161,11 @@ export default function StockDetailPage({ params }: { params: Promise<{ symbol: 
                 {/* 6. Our Analysis Section (Rules-based signals & score) */}
                 <section>
                     <StockAnalysis symbol={symbol} />
+                </section>
+
+                {/* 7. Current rule-based prediction / market setup */}
+                <section>
+                    <PredictionMarketSetup symbol={symbol} />
                 </section>
             </div>
 

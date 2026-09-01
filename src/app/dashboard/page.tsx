@@ -12,7 +12,7 @@ import { SellModal } from '@/components/dashboard/SellModal';
 import { StockDetailsModal } from '../../components/dashboard/StockDetailsModal';
 import { Button } from '@/components/ui/BaseComponents';
 import { ThemeToggle } from '@/components/ThemeToggle';
-import { LogOut, Plus, RefreshCw, AlertCircle, CheckCircle2, Eye, EyeOff, Clock, Briefcase, Shield } from 'lucide-react';
+import { LogOut, Plus, RefreshCw, AlertCircle, CheckCircle2, Eye, EyeOff, Clock, Briefcase, Shield, BarChart3 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { WalletCard } from '@/components/dashboard/WalletCard';
 import { StockNotification } from '@/components/dashboard/StockNotification';
@@ -154,6 +154,14 @@ export default function Dashboard() {
                         </div>
                         {/* <ThemeToggle /> */}
                         <StockNotification stocks={stocks} />
+                        <Link href="/dashboard/prediction">
+                            <Button
+                                variant="outline"
+                                className="h-11 md:h-12 px-3 md:px-4 rounded-xl border-violet-200 dark:border-violet-900/50 text-violet-700 dark:text-violet-400 hover:bg-violet-50 dark:hover:bg-violet-900/20 font-bold transition-all shadow-sm text-xs md:text-sm"
+                            >
+                                <BarChart3 size={16} className="mr-1.5" /> Market Setup
+                            </Button>
+                        </Link>
 
                         <Button
                             variant="outline"
