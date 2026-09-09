@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, BarChart3 } from 'lucide-react';
+import { ArrowLeft, BarChart3, Beaker } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { StockAutocomplete } from '@/components/dashboard/StockAutocomplete';
 import { PredictionMarketSetup } from '@/components/stock/PredictionMarketSetup';
@@ -40,6 +40,8 @@ export default function PredictionPage() {
                         </div>
                     </div>
                 </section>
+
+                <Link href="/dashboard/paper-trading" className="inline-flex items-center gap-2 text-sm font-bold text-violet-600 dark:text-violet-400 hover:underline"><Beaker size={16} /> Open Paper Trading Lab</Link>
 
                 {symbol ? (
                     <section className="space-y-3">
