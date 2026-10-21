@@ -7,9 +7,9 @@ import { ArrowDownLeft, ArrowUpRight, Wallet, History, ArrowLeft, Download, Chev
 import { formatCurrency, cn } from '@/lib/utils';
 import { AddFundsModal } from '@/components/dashboard/wallet/AddFundsModal';
 import { WithdrawFundsModal } from '@/components/dashboard/wallet/WithdrawFundsModal';
+import { ExportTransactionsModal } from '@/components/dashboard/wallet/ExportTransactionsModal';
 import Link from 'next/link';
 import dayjs from 'dayjs';
-import * as XLSX from 'xlsx';
 
 interface Transaction {
     id: number;
@@ -44,6 +44,7 @@ export default function WalletPage() {
     const [loading, setLoading] = useState(true);
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
+    const [isExportModalOpen, setIsExportModalOpen] = useState(false);
     const [activeTab, setActiveTab] = useState<'wallet' | 'trades'>('wallet');
     const [tradeFilter, setTradeFilter] = useState<'all' | 'buy' | 'sell'>('all');
     const [expandedMonths, setExpandedMonths] = useState<string[]>([]);
@@ -163,26 +164,6 @@ export default function WalletPage() {
         );
     };
 
-    const handleExportExcel = () => {
-        const dataToExport = filteredTransactions.map(tx => ({
-            Date: tx.displayDate,
-            Type: tx.type.replace('_', ' '),
-            Symbol: tx.symbol,
-            Description: tx.description,
-            'Quantity': tx.quantity || '—',
-            'Buy Price': tx.displayBuyPrice ?? '—',
-            'Sell Price': tx.displaySellPrice ?? '—',
-            'P/L': tx.displayPL ?? '—',
-            'Net Value (Wallet Impact)': tx.displayNetValue
-        }));
-
-        const ws = XLSX.utils.json_to_sheet(dataToExport);
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Transactions");
-        XLSX.writeFile(wb, `trading-report-${dayjs().format('YYYY-MM-DD')}.xlsx`);
-        showToast('Export successful');
-    };
-
     const getTransactionColor = (tx: ParsedTransaction) => {
         if (tx.displayPL !== null) {
             return tx.displayPL >= 0
@@ -251,9 +232,9 @@ export default function WalletPage() {
                         <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">Wallet</h1>
                     </div>
                     <Button
-                        onClick={handleExportExcel}
-                        className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl px-6 py-5 md:py-2"
-                        disabled={filteredTransactions.length === 0}
+                        onClick={() => setIsExportModalOpen(true)}
+                        className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl px-6 py-5 md:py-2 shadow-sm hover:shadow-md transition-all"
+                        disabled={transactions.length === 0}
                     >
                         <Download size={18} className="mr-2" /> Export to Excel
                     </Button>
@@ -548,6 +529,15 @@ export default function WalletPage() {
                     showToast('Funds withdrawn successfully');
                 }}
                 currentBalance={balance}
+            />
+
+            <ExportTransactionsModal
+                isOpen={isExportModalOpen}
+                onClose={() => setIsExportModalOpen(false)}
+                transactions={parsedTransactions}
+                currentTab={activeTab}
+                tradeFilter={tradeFilter}
+                onSuccess={(msg) => showToast(msg)}
             />
         </div>
     );

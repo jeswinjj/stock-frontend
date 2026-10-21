@@ -71,16 +71,16 @@ export const PortfolioTable = ({ stocks, onSell, onAddMore, onView, onSort, sort
                         <th className="px-6 py-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors" onClick={() => onSort('pl')}>
                             P&L (%) {renderSortArrow('pl')}
                         </th>
+                        <th className="px-6 py-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors" onClick={() => onSort('investedAmount')}>
+                            Invested Amount {renderSortArrow('investedAmount')}
+                        </th>
                         <th className="px-6 py-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors" onClick={() => onSort('currentValue')}>
                             Current Value {renderSortArrow('currentValue')}
-                        </th>
-                        <th className="px-6 py-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors" onClick={() => onSort('realizedPL')}>
-                            Realized P&L {renderSortArrow('realizedPL')}
                         </th>
                         <th className="px-6 py-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors" onClick={() => onSort('lastUpdatedAt')}>
                             Last Updated {renderSortArrow('lastUpdatedAt')}
                         </th>
-                        <th className="px-6 py-4 text-right">Actions</th>
+                        <th className="px-6 py-4 text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-50 dark:divide-gray-800 bg-white dark:bg-slate-800 transition-colors duration-300">
@@ -88,6 +88,7 @@ export const PortfolioTable = ({ stocks, onSell, onAddMore, onView, onSort, sort
                         const plPercentage = stock.pnlPercentage ?? (((stock.currentPrice - stock.averagePrice) / stock.averagePrice) * 100);
                         const isProfit = stock.unrealizedPL >= 0;
                         const isDayUp = (stock.dayChange || 0) >= 0;
+                        const investedAmount = (stock.averagePrice * stock.totalQuantity) || stock.investedAmount || stock.invested_amount || 0;
 
                         return (
                             <tr key={stock.symbol} className={getRowClass(stock)}>
@@ -130,12 +131,8 @@ export const PortfolioTable = ({ stocks, onSell, onAddMore, onView, onSort, sort
                                         {hideBalance ? "XXXXX" : formatCurrency(stock.unrealizedPL)} ({formatPercentage(plPercentage)})
                                     </span>
                                 </td>
+                                <td className="px-6 py-4 font-semibold text-gray-900 dark:text-white">{maskValue(investedAmount)}</td>
                                 <td className="px-6 py-4 font-semibold text-gray-900 dark:text-white">{maskValue(stock.currentValue)}</td>
-                                <td className="px-6 py-4">
-                                    <span className={cn("text-sm font-medium", stock.realizedPL >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400")}>
-                                        {maskValue(stock.realizedPL || 0)}
-                                    </span>
-                                </td>
                                 <td className="px-6 py-4 text-xs text-gray-400 dark:text-gray-500">
                                     {stock.lastUpdatedAt ? dayjs(stock.lastUpdatedAt).fromNow() : 'Never'}
                                 </td>
@@ -200,6 +197,9 @@ export const PortfolioTable = ({ stocks, onSell, onAddMore, onView, onSort, sort
                                     <p className="text-[9px] text-gray-400 dark:text-gray-500 uppercase font-black tracking-widest mb-0.5">Holding Details</p>
                                     <p className="text-xs font-bold text-gray-800 dark:text-gray-200">
                                         {stock.totalQuantity} Shares @ {maskValue(stock.averagePrice)}
+                                    </p>
+                                    <p className="text-[11px] text-gray-500 dark:text-gray-400 font-semibold mt-0.5">
+                                        Invested: {maskValue((stock.averagePrice * stock.totalQuantity) || stock.investedAmount || stock.invested_amount || 0)}
                                     </p>
                                 </div>
                                 <div className="text-right">
